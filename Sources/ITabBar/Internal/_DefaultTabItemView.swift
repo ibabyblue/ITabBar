@@ -1,12 +1,12 @@
 import SwiftUI
 
 @MainActor
-struct _DefaultTabItemView: View {
-    let config: ITabBarItemConfig
-    let isSelected: Bool
-    let style: ITabBarStyle
+public struct _DefaultTabItemView: View {
+    public let config: ITabBarItemConfig
+    public let isSelected: Bool
+    public let style: ITabBarStyle
 
-    var body: some View {
+    public var body: some View {
         VStack(spacing: 3) {
             ZStack(alignment: .topTrailing) {
                 Image(systemName: isSelected ? (config.selectedIcon ?? config.icon) : config.icon)
