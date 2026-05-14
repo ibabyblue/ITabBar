@@ -1,6 +1,6 @@
 import SwiftUI
 
-public struct ITabBarItemConfig {
+public struct ITabBarItemConfig: Sendable {
     public var icon: String
     public var selectedIcon: String?
     public var title: String
@@ -22,10 +22,10 @@ public struct ITabBarItemConfig {
     }
 }
 
-public enum ITabBarAnimation {
+public enum ITabBarAnimation: Sendable {
     case bounce
     case wiggle
     case pop
     case none
-    case custom(@MainActor (Bool) -> AnyView)
+    case custom(@MainActor @Sendable (Bool) -> AnyView)
 }

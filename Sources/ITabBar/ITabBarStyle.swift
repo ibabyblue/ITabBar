@@ -1,6 +1,6 @@
 import SwiftUI
 
-public struct ITabBarStyle {
+public struct ITabBarStyle: Sendable {
     public var selectedColor: Color       = .primary
     public var unselectedColor: Color     = .secondary
     public var selectedFont: Font         = .system(size: 10, weight: .medium)
