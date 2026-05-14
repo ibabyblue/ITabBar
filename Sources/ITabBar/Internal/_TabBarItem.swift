@@ -1,7 +1,7 @@
 import SwiftUI
 
 @MainActor
-struct _TabBarItem<TabItemView: View>: View {
+struct _TabBarItem<TabItemView: View & Sendable>: View {
     let isSelected: Bool
     let animation: ITabBarAnimation
     let onTap: () -> Void
@@ -14,13 +14,16 @@ struct _TabBarItem<TabItemView: View>: View {
     var body: some View {
         animatedContent
             .contentShape(Rectangle())
-            .onTapGesture(count: 2) {
-                onDoubleTap?()
-            }
-            .onTapGesture(count: 1) {
-                onTap()
-                if isSelected { animKey.toggle() }
-            }
+            .gesture(
+                TapGesture(count: 2)
+                    .onEnded { onDoubleTap?() }
+                    .exclusively(before: TapGesture(count: 1)
+                        .onEnded {
+                            onTap()
+                            if isSelected { animKey.toggle() }
+                        }
+                    )
+            )
             .onLongPressGesture(minimumDuration: 0.5) {
                 onLongPress?()
             }
