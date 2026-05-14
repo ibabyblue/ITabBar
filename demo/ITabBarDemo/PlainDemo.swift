@@ -9,14 +9,12 @@ struct PlainDemo: View {
     @State private var selection: PlainTab = .home
     @Environment(\.dismiss) private var dismiss
 
-    private var configs: [PlainTab: ITabBarItemConfig] {
-        [
-            .home:     ITabBarItemConfig(icon: "house",           title: "Home"),
-            .explore:  ITabBarItemConfig(icon: "magnifyingglass", title: "Explore"),
-            .messages: ITabBarItemConfig(icon: "message",         title: "Messages", badge: "3"),
-            .profile:  ITabBarItemConfig(icon: "person",          title: "Profile"),
-        ]
-    }
+    private let configs: [PlainTab: ITabBarItemConfig] = [
+        .home:     ITabBarItemConfig(icon: "house",           title: "Home"),
+        .explore:  ITabBarItemConfig(icon: "magnifyingglass", title: "Explore"),
+        .messages: ITabBarItemConfig(icon: "message",         title: "Messages", badge: "3"),
+        .profile:  ITabBarItemConfig(icon: "person",          title: "Profile"),
+    ]
 
     var body: some View {
         ITabBar(

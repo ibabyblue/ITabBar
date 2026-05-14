@@ -18,12 +18,12 @@ struct AnimationDemo: View {
     @State private var selection: AnimTab = .bounce
     @Environment(\.dismiss) private var dismiss
 
-    private var style: ITabBarStyle {
+    private let style: ITabBarStyle = {
         var s = ITabBarStyle()
         s.selectedColor = .orange
         s.fabColor = .orange
         return s
-    }
+    }()
 
     var body: some View {
         let currentStyle = style
