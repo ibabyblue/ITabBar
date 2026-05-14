@@ -6,6 +6,12 @@ public struct ITabBarDefaultItemView: View {
     public let isSelected: Bool
     public let style: ITabBarStyle
 
+    public init(config: ITabBarItemConfig, isSelected: Bool, style: ITabBarStyle) {
+        self.config = config
+        self.isSelected = isSelected
+        self.style = style
+    }
+
     public var body: some View {
         VStack(spacing: 3) {
             ZStack(alignment: .topTrailing) {
