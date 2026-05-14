@@ -10,6 +10,7 @@ public struct ITabBar<Tab: Hashable, Content: View, TabItemView: View & Sendable
     private let tabItem: (Tab, Bool) -> TabItemView
     private var doubleTapAction: ((Tab) -> Void)?
     private var longPressAction: ((Tab) -> Void)?
+    private var animationProvider: (@Sendable (Tab) -> ITabBarAnimation)?
 
     public init(
         tabs: [Tab],
@@ -63,7 +64,7 @@ public struct ITabBar<Tab: Hashable, Content: View, TabItemView: View & Sendable
                             let longPress = longPressAction
                             _TabBarItem(
                                 isSelected: validSelection == tab,
-                                animation: .bounce,
+                                animation: animationProvider?(tab) ?? .bounce,
                                 onTap: { selection = tab },
                                 onDoubleTap: doubleTap.map { action in { action(tab) } },
                                 onLongPress: longPress.map { action in { action(tab) } }
@@ -106,7 +107,7 @@ public struct ITabBar<Tab: Hashable, Content: View, TabItemView: View & Sendable
 
 // MARK: - Convenience init (default template)
 
-public extension ITabBar where TabItemView == _DefaultTabItemView {
+public extension ITabBar where TabItemView == ITabBarDefaultItemView {
     init(
         tabs: [Tab],
         selection: Binding<Tab>,
@@ -124,12 +125,13 @@ public extension ITabBar where TabItemView == _DefaultTabItemView {
             onCenterTap: onCenterTap,
             content: content,
             tabItem: { tab, isSelected in
-                _DefaultTabItemView(
+                ITabBarDefaultItemView(
                     config: configs[tab] ?? ITabBarItemConfig(icon: "questionmark", title: ""),
                     isSelected: isSelected,
                     style: style
                 )
             }
         )
+        self.animationProvider = { tab in configs[tab]?.animation ?? .bounce }
     }
 }

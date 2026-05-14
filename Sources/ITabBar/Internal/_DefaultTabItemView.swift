@@ -1,7 +1,7 @@
 import SwiftUI
 
 @MainActor
-public struct _DefaultTabItemView: View {
+public struct ITabBarDefaultItemView: View {
     public let config: ITabBarItemConfig
     public let isSelected: Bool
     public let style: ITabBarStyle
