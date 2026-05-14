@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct _FABButton: View {
     let size: CGFloat
     let color: Color
