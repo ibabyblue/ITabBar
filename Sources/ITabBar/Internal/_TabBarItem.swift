@@ -15,18 +15,20 @@ struct _TabBarItem<TabItemView: View & Sendable>: View {
         animatedContent
             .contentShape(Rectangle())
             .gesture(
-                TapGesture(count: 2)
-                    .onEnded { onDoubleTap?() }
-                    .exclusively(before: TapGesture(count: 1)
-                        .onEnded {
-                            onTap()
-                            if isSelected { animKey.toggle() }
-                        }
+                LongPressGesture(minimumDuration: 0.5)
+                    .onEnded { _ in onLongPress?() }
+                    .exclusively(before:
+                        TapGesture(count: 2)
+                            .onEnded { onDoubleTap?() }
+                            .exclusively(before:
+                                TapGesture(count: 1)
+                                    .onEnded {
+                                        onTap()
+                                        if isSelected { animKey.toggle() }
+                                    }
+                            )
                     )
             )
-            .onLongPressGesture(minimumDuration: 0.5) {
-                onLongPress?()
-            }
             .onChange(of: isSelected) { _, newValue in
                 if newValue { animKey.toggle() }
             }
