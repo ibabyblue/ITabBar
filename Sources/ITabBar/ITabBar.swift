@@ -10,7 +10,7 @@ public struct ITabBar<Tab: Hashable, Content: View, TabItemView: View & Sendable
     private let tabItem: (Tab, Bool) -> TabItemView
     private var doubleTapAction: ((Tab) -> Void)?
     private var longPressAction: ((Tab) -> Void)?
-    private var animationProvider: (@Sendable (Tab) -> ITabBarAnimation)?
+    private var configStore: [Tab: ITabBarItemConfig]?
 
     public init(
         tabs: [Tab],
@@ -64,7 +64,7 @@ public struct ITabBar<Tab: Hashable, Content: View, TabItemView: View & Sendable
                             let longPress = longPressAction
                             _TabBarItem(
                                 isSelected: validSelection == tab,
-                                animation: animationProvider?(tab) ?? .bounce,
+                                animation: configStore?[tab]?.animation ?? .bounce,
                                 onTap: { selection = tab },
                                 onDoubleTap: doubleTap.map { action in { action(tab) } },
                                 onLongPress: longPress.map { action in { action(tab) } }
@@ -132,6 +132,6 @@ public extension ITabBar where TabItemView == ITabBarDefaultItemView {
                 )
             }
         )
-        self.animationProvider = { tab in configs[tab]?.animation ?? .bounce }
+        self.configStore = configs
     }
 }
