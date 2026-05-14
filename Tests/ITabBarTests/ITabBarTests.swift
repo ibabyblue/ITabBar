@@ -28,3 +28,18 @@ import SwiftUI
         #expect(badgeTruncated(nil) == nil)
     }
 }
+
+@Suite struct SelectionHelpersTests {
+    @Test func validSelectionReturnsItself() {
+        #expect(validatedSelection(2, in: [1, 2, 3]) == 2)
+    }
+    @Test func invalidSelectionReturnsFirst() {
+        #expect(validatedSelection(99, in: [1, 2, 3]) == 1)
+    }
+    @Test func emptyTabsReturnsNil() {
+        #expect(validatedSelection(1, in: [] as [Int]) == nil)
+    }
+    @Test func singleTabAlwaysReturnsIt() {
+        #expect(validatedSelection(42, in: [7]) == 7)
+    }
+}
