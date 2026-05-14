@@ -12,26 +12,39 @@ struct _TabBarItem<TabItemView: View & Sendable>: View {
     @State private var animKey = false
 
     var body: some View {
-        animatedContent
-            .contentShape(Rectangle())
-            .gesture(
-                LongPressGesture(minimumDuration: 0.5)
-                    .onEnded { _ in onLongPress?() }
-                    .exclusively(before:
-                        TapGesture(count: 2)
-                            .onEnded { onDoubleTap?() }
-                            .exclusively(before:
-                                TapGesture(count: 1)
-                                    .onEnded {
-                                        onTap()
-                                        if isSelected { animKey.toggle() }
-                                    }
-                            )
-                    )
-            )
-            .onChange(of: isSelected) { _, newValue in
-                if newValue { animKey.toggle() }
-            }
+        if let doubleTap = onDoubleTap {
+            animatedContent
+                .contentShape(Rectangle())
+                .gesture(
+                    LongPressGesture(minimumDuration: 0.5)
+                        .onEnded { _ in onLongPress?() }
+                        .exclusively(before:
+                            TapGesture(count: 2)
+                                .onEnded { doubleTap() }
+                                .exclusively(before:
+                                    TapGesture(count: 1)
+                                        .onEnded { onTap(); if isSelected { animKey.toggle() } }
+                                )
+                        )
+                )
+                .onChange(of: isSelected) { _, newValue in
+                    if newValue { animKey.toggle() }
+                }
+        } else {
+            animatedContent
+                .contentShape(Rectangle())
+                .gesture(
+                    LongPressGesture(minimumDuration: 0.5)
+                        .onEnded { _ in onLongPress?() }
+                        .exclusively(before:
+                            TapGesture(count: 1)
+                                .onEnded { onTap(); if isSelected { animKey.toggle() } }
+                        )
+                )
+                .onChange(of: isSelected) { _, newValue in
+                    if newValue { animKey.toggle() }
+                }
+        }
     }
 
     @ViewBuilder
