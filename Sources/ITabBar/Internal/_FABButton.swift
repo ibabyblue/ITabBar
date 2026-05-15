@@ -14,8 +14,16 @@ struct _FABButton: View {
                 .font(.system(size: size * 0.38, weight: .medium))
                 .foregroundStyle(.white)
                 .frame(width: size, height: size)
-                .background(color, in: Circle())
-                .shadow(color: color.opacity(0.4), radius: 8, y: 4)
+                .background(
+                    Circle().fill(
+                        LinearGradient(
+                            colors: [color.opacity(0.85), color],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                )
+                .shadow(color: color.opacity(0.3), radius: 10, x: 8, y: 16)
         }
         .buttonStyle(.plain)
     }

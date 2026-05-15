@@ -18,7 +18,10 @@ public struct ITabBarStyle: Sendable {
     public var badgeColor: Color         = .red
     public var badgeFont: Font           = .system(size: 10, weight: .bold)
 
-    public var curveRadius: CGFloat      = 28
+    public var curveRadius: CGFloat      = 38
+    public var fabGap: CGFloat           = 8
+    /// convex 模式下 FAB 顶部超出 tab bar 顶部的距离，同时控制 dome 弧的高度
+    public var convexProtrusion: CGFloat = 15
 
     public init() {}
 }

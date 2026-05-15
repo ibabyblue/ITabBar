@@ -37,8 +37,8 @@ public struct ITabBar<Tab: Hashable, Content: View, TabItemView: View & Sendable
     private var fabYOffset: CGFloat {
         switch shape {
         case .plain:   return 0
-        case .concave: return -(style.fabSize / 2 + 8)
-        case .convex:  return -(style.fabSize / 2 + style.curveRadius / 2 + 4)
+        case .concave: return style.curveRadius - style.fabSize - style.fabGap
+        case .convex:  return -style.convexProtrusion
         }
     }
 
@@ -50,40 +50,38 @@ public struct ITabBar<Tab: Hashable, Content: View, TabItemView: View & Sendable
                     .ignoresSafeArea()
             }
 
-            VStack(spacing: 0) {
-                Spacer()
-                ZStack(alignment: .top) {
-                    _TabBarBackground(shape: shape, style: style)
-
-                    HStack(spacing: style.itemSpacing > 0 ? style.itemSpacing : nil) {
-                        ForEach(Array(tabs.enumerated()), id: \.offset) { idx, tab in
-                            if shape != .plain && idx == tabs.count / 2 {
-                                Spacer().frame(width: style.fabSize + 16)
-                            }
-                            let doubleTap = doubleTapAction
-                            let longPress = longPressAction
-                            _TabBarItem(
-                                isSelected: validSelection == tab,
-                                animation: configStore?[tab]?.animation ?? .bounce,
-                                onTap: { selection = tab },
-                                onDoubleTap: doubleTap.map { action in { action(tab) } },
-                                onLongPress: longPress.map { action in { action(tab) } }
-                            ) {
-                                tabItem(tab, validSelection == tab)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 8)
+            ZStack(alignment: .top) {
+                _TabBarBackground(shape: shape, style: style)
                     .frame(height: style.height)
 
-                    if shape != .plain {
-                        _FABButton(size: style.fabSize, color: style.fabColor, onTap: onCenterTap)
-                            .offset(y: fabYOffset)
+                HStack(spacing: style.itemSpacing > 0 ? style.itemSpacing : nil) {
+                    ForEach(Array(tabs.enumerated()), id: \.offset) { idx, tab in
+                        if shape != .plain && idx == tabs.count / 2 {
+                            Spacer().frame(width: style.fabSize + 16)
+                        }
+                        let doubleTap = doubleTapAction
+                        let longPress = longPressAction
+                        _TabBarItem(
+                            isSelected: validSelection == tab,
+                            animation: configStore?[tab]?.animation ?? .bounce,
+                            onTap: { selection = tab },
+                            onDoubleTap: doubleTap.map { action in { action(tab) } },
+                            onLongPress: longPress.map { action in { action(tab) } }
+                        ) {
+                            tabItem(tab, validSelection == tab)
+                        }
                     }
                 }
+                .padding(.horizontal, 8)
                 .frame(height: style.height)
-                .clipped(antialiased: false)
+                .offset(y: 0)
+
+                if shape != .plain {
+                    _FABButton(size: style.fabSize, color: style.fabColor, onTap: onCenterTap)
+                        .offset(y: fabYOffset)
+                }
             }
+            .frame(height: style.height)
         }
         .onChange(of: selection) { _, newValue in
             if !tabs.contains(newValue), let first = tabs.first {
