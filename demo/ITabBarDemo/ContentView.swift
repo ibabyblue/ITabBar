@@ -5,6 +5,7 @@ enum Demo: String, CaseIterable, Identifiable {
     case concave   = "Concave (Water Drop)"
     case convex    = "Convex (Dome)"
     case animation = "Animations"
+    case lottie    = "Lottie Animation"
 
     var id: String { rawValue }
 }
@@ -25,6 +26,7 @@ struct ContentView: View {
             case .concave:   ConcaveDemo()
             case .convex:    ConvexDemo()
             case .animation: AnimationDemo()
+            case .lottie:    LottieAnimationDemo()
             }
         }
     }

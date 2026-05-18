@@ -14,6 +14,12 @@
 		CCCC000000000000000000A5 /* ConvexDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000B5 /* ConvexDemo.swift */; };
 		CCCC000000000000000000A6 /* AnimationDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000B6 /* AnimationDemo.swift */; };
 		CCCC000000000000000000A7 /* ITabBar in Frameworks */ = {isa = PBXBuildFile; productRef = CCCC000000000000000000F9 /* ITabBar */; };
+		CCCC000000000000000000A8 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = CCCC000000000000000000FA /* Lottie */; };
+		CCCC000000000000000000A9 /* LottieAnimationDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000B8 /* LottieAnimationDemo.swift */; };
+		CCCC000000000000000000AA /* tab_heart.json in Resources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000B9 /* tab_heart.json */; };
+		CCCC000000000000000000AB /* tab_switch.json in Resources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000BA /* tab_switch.json */; };
+		CCCC000000000000000000AC /* tab_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000BB /* tab_icons.json */; };
+		CCCC000000000000000000AD /* tab_watermelon.json in Resources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000BC /* tab_watermelon.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +30,11 @@
 		CCCC000000000000000000B5 /* ConvexDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvexDemo.swift; sourceTree = "<group>"; };
 		CCCC000000000000000000B6 /* AnimationDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationDemo.swift; sourceTree = "<group>"; };
 		CCCC000000000000000000B7 /* ITabBarDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ITabBarDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CCCC000000000000000000B8 /* LottieAnimationDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieAnimationDemo.swift; sourceTree = "<group>"; };
+		CCCC000000000000000000B9 /* tab_heart.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tab_heart.json; sourceTree = "<group>"; };
+		CCCC000000000000000000BA /* tab_switch.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tab_switch.json; sourceTree = "<group>"; };
+		CCCC000000000000000000BB /* tab_icons.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tab_icons.json; sourceTree = "<group>"; };
+		CCCC000000000000000000BC /* tab_watermelon.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tab_watermelon.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +43,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCCC000000000000000000A7 /* ITabBar in Frameworks */,
+				CCCC000000000000000000A8 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,6 +67,11 @@
 				CCCC000000000000000000B4 /* ConcaveDemo.swift */,
 				CCCC000000000000000000B5 /* ConvexDemo.swift */,
 				CCCC000000000000000000B6 /* AnimationDemo.swift */,
+				CCCC000000000000000000B8 /* LottieAnimationDemo.swift */,
+				CCCC000000000000000000B9 /* tab_heart.json */,
+				CCCC000000000000000000BA /* tab_switch.json */,
+				CCCC000000000000000000BB /* tab_icons.json */,
+				CCCC000000000000000000BC /* tab_watermelon.json */,
 			);
 			path = ITabBarDemo;
 			sourceTree = "<group>";
@@ -85,6 +102,7 @@
 			name = ITabBarDemo;
 			packageProductDependencies = (
 				CCCC000000000000000000F9 /* ITabBar */,
+				CCCC000000000000000000FA /* Lottie */,
 			);
 			productName = ITabBarDemo;
 			productReference = CCCC000000000000000000B7 /* ITabBarDemo.app */;
@@ -116,6 +134,7 @@
 			mainGroup = CCCC000000000000000000D1;
 			packageReferences = (
 				CCCC000000000000000000F8 /* XCLocalSwiftPackageReference ".." */,
+				CCCC000000000000000000FB /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			productRefGroup = CCCC000000000000000000D3 /* Products */;
 			projectDirPath = "";
@@ -131,6 +150,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCCC000000000000000000AA /* tab_heart.json in Resources */,
+				CCCC000000000000000000AB /* tab_switch.json in Resources */,
+				CCCC000000000000000000AC /* tab_icons.json in Resources */,
+				CCCC000000000000000000AD /* tab_watermelon.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +170,7 @@
 				CCCC000000000000000000A4 /* ConcaveDemo.swift in Sources */,
 				CCCC000000000000000000A5 /* ConvexDemo.swift in Sources */,
 				CCCC000000000000000000A6 /* AnimationDemo.swift in Sources */,
+				CCCC000000000000000000A9 /* LottieAnimationDemo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,11 +380,27 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		CCCC000000000000000000FB /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		CCCC000000000000000000F9 /* ITabBar */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CCCC000000000000000000F8 /* XCLocalSwiftPackageReference ".." */;
 			productName = ITabBar;
+		};
+		CCCC000000000000000000FA /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CCCC000000000000000000FB /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
