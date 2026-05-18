@@ -31,7 +31,7 @@ A custom tab bar component for iOS 17+. Three shape styles (plain, concave water
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/ibabyblue/ITabBar", from: "0.0.1")
+    .package(url: "https://github.com/ibabyblue/ITabBar", from: "0.1.0")
 ],
 targets: [
     .target(
