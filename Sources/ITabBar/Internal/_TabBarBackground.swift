@@ -49,15 +49,19 @@ struct ConcaveShape: Shape {
     }
 }
 
-// Single smooth dome arc from flat edge to flat edge.
-// Connection half-width  = fabSize/2 + fabGap  → controls how wide the opening is.
-// domePeak               = convexProtrusion + fabGap → controls dome height.
-// Arc center is derived analytically so the arc passes through both edge connection
-// points and the peak — no separate shoulder arcs, fully smooth.
+// Dome shape: three segments per side.
+//   1. flat bar top
+//   2. cubic shoulder rising smoothly from flat top to wrap-arc entry
+//   3. wrap arc — concentric with the FAB (radius = fabRadius + fabGap), arcs over
+//      the FAB top so the bar's edge appears to hug the button at a fixed gap
+// The cubic shoulder's end tangent is matched analytically to the wrap arc's tangent
+// at the entry point, so the shoulder→wrap junction is curvature-continuous.
 struct ConvexShape: Shape {
-    var cornerRadius: CGFloat   // matches ConcaveShape corner radius (style.curveRadius)
-    var domeHalfWidth: CGFloat  // = fabSize/2 + fabGap
-    var domePeak: CGFloat       // = convexProtrusion + fabGap
+    var cornerRadius: CGFloat
+    var fabRadius: CGFloat           // = fabSize / 2
+    var fabGap: CGFloat              // gap between FAB and bar's wrap arc
+    var fabCenterY: CGFloat          // FAB center y (positive = inside bar, below bar top)
+    var shoulderExtension: CGFloat   // how far the shoulder cubic extends beyond the wrap-entry
 
     func path(in rect: CGRect) -> Path {
         var path = Path()
@@ -65,33 +69,80 @@ struct ConvexShape: Shape {
         let w = rect.width, h = rect.height
         let cx = w / 2
 
+        // Wrap circle: concentric with FAB, radius = fabRadius + fabGap.
+        // The bar's edge follows this arc over the FAB so there's always exactly
+        // fabGap between FAB and bar edge in the wrap region.
+        let wrapR = fabRadius + fabGap
+        // Wrap arc starts where the bar leaves the flat top — at y = -wrapEntryY above bar top.
+        // Use fabGap as the entry height: small lift so the shoulder cubic has somewhere to land.
+        let wrapEntryY = fabGap
+        // Wrap entry x offset (from cx) on the wrap circle at y = -wrapEntryY
+        let entryDy = fabCenterY + wrapEntryY   // vertical distance from wrap center to entry y
+        let entryDxSquared = wrapR * wrapR - entryDy * entryDy
+        let wrapEntryX = entryDxSquared > 0 ? sqrt(entryDxSquared) : 0
+
+        // Shoulder cubic starts at (cx ± (wrapEntryX + shoulderExtension), y = 0)
+        let shoulderStartX = wrapEntryX + shoulderExtension
+
+        // Tangent at the wrap-entry point along the traversal direction (going up over FAB).
+        // For SwiftUI's y-down arc with clockwise:false (angles increasing),
+        // dP/dθ at angle θ is (-sin θ, cos θ) · R.
+        // Direction normalized: (-sin θ, cos θ).
+        let entryAngle = atan2(-wrapEntryY - fabCenterY, -wrapEntryX)
+        let tangentDx = -sin(entryAngle)
+        let tangentDy = cos(entryAngle)
+
+        // Cubic control-point distance: roughly 1/3 of the cubic's chord length.
+        let chord = sqrt(shoulderExtension * shoulderExtension + wrapEntryY * wrapEntryY)
+        let k = chord / 3
+
+        let shoulderStartL = CGPoint(x: cx - shoulderStartX, y: 0)
+        let wrapEntryL = CGPoint(x: cx - wrapEntryX, y: -wrapEntryY)
+        // Left cubic: tangent horizontal at start, tangent (tangentDx, tangentDy) at end.
+        let c1L = CGPoint(x: shoulderStartL.x + k, y: 0)
+        let c2L = CGPoint(x: wrapEntryL.x - k * tangentDx, y: wrapEntryL.y - k * tangentDy)
+
+        // Right cubic: mirror across x = cx
+        let wrapEntryR = CGPoint(x: cx + wrapEntryX, y: -wrapEntryY)
+        let shoulderStartR = CGPoint(x: cx + shoulderStartX, y: 0)
+        let c1R = CGPoint(x: wrapEntryR.x + k * tangentDx, y: wrapEntryR.y - k * tangentDy)
+        let c2R = CGPoint(x: shoulderStartR.x - k, y: 0)
+
+        // Wrap arc angles (SwiftUI degrees, normalized to [0, 360))
+        let leftAngleRad = atan2(wrapEntryL.y - fabCenterY, wrapEntryL.x - cx)
+        let rightAngleRad = atan2(wrapEntryR.y - fabCenterY, wrapEntryR.x - cx)
+        var leftAngleDeg = Double(leftAngleRad * 180 / .pi)
+        if leftAngleDeg < 0 { leftAngleDeg += 360 }
+        var rightAngleDeg = Double(rightAngleRad * 180 / .pi)
+        if rightAngleDeg < 0 { rightAngleDeg += 360 }
+
         path.move(to: CGPoint(x: 0, y: 0))
 
-        // top-left corner — identical to ConcaveShape
+        // top-left corner
         path.addArc(
             center: CGPoint(x: cr2, y: cr2), radius: cr2,
             startAngle: .degrees(180), endAngle: .degrees(270), clockwise: false
         )
 
-        // Dome arc: single smooth arc on a circle centered at (cx, yc).
-        // Passes through (cx ± domeHalfWidth, 0) on the flat edge and peaks at (cx, -domePeak).
-        // yc derived from: domeHalfWidth² + yc² = (yc + domePeak)²
-        let yc = (domeHalfWidth * domeHalfWidth - domePeak * domePeak) / (2 * domePeak)
-        let domeR = yc + domePeak
+        // flat bar top to left shoulder start
+        path.addLine(to: shoulderStartL)
 
-        // Angles from (cx, yc) to the connection points
-        let startRad: CGFloat = atan2(-yc, -domeHalfWidth)
-        let endRad:   CGFloat = atan2(-yc,  domeHalfWidth)
-        var startDeg = Double(startRad * 180 / .pi); if startDeg < 0 { startDeg += 360 }
-        var endDeg   = Double(endRad   * 180 / .pi); if endDeg   < 0 { endDeg   += 360 }
+        // left shoulder cubic — smooth rise from flat to wrap entry
+        path.addCurve(to: wrapEntryL, control1: c1L, control2: c2L)
 
-        // addArc implicitly draws the flat-edge line from the corner arc end to the dome start
+        // wrap arc over the FAB — concentric with FAB, gap = fabGap
         path.addArc(
-            center: CGPoint(x: cx, y: yc), radius: domeR,
-            startAngle: .degrees(startDeg), endAngle: .degrees(endDeg), clockwise: false
+            center: CGPoint(x: cx, y: fabCenterY), radius: wrapR,
+            startAngle: .degrees(leftAngleDeg), endAngle: .degrees(rightAngleDeg), clockwise: false
         )
 
-        // top-right corner — identical to ConcaveShape (implicit flat-edge line to here)
+        // right shoulder cubic — mirror of left
+        path.addCurve(to: shoulderStartR, control1: c1R, control2: c2R)
+
+        // flat bar top to top-right corner
+        path.addLine(to: CGPoint(x: w - cr2, y: 0))
+
+        // top-right corner
         path.addArc(
             center: CGPoint(x: w - cr2, y: cr2), radius: cr2,
             startAngle: .degrees(270), endAngle: .degrees(360), clockwise: false
@@ -117,8 +168,10 @@ struct _TabBarBackground: View {
         case .convex:
             backgroundContent(ConvexShape(
                 cornerRadius: style.curveRadius,
-                domeHalfWidth: style.fabSize / 2 + style.fabGap,
-                domePeak: style.convexProtrusion + style.fabGap
+                fabRadius: style.fabSize / 2,
+                fabGap: style.fabGap,
+                fabCenterY: -style.convexProtrusion + style.fabSize / 2,
+                shoulderExtension: style.fabGap * 3
             ))
         }
     }
