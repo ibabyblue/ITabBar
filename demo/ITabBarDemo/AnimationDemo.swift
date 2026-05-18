@@ -25,27 +25,34 @@ struct AnimationDemo: View {
         return s
     }()
 
+    private var configs: [AnimTab: ITabBarItemConfig] {
+        Dictionary(uniqueKeysWithValues: AnimTab.allCases.map { tab in
+            (tab, ITabBarItemConfig(
+                icon: "star",
+                selectedIcon: "star.fill",
+                title: tab.title,
+                animation: tab.animation
+            ))
+        })
+    }
+
     var body: some View {
-        let currentStyle = style
         ITabBar(
             tabs: AnimTab.allCases,
             selection: $selection,
             shape: .concave,
-            style: currentStyle,
+            style: style,
+            configs: configs,
             onCenterTap: nil
         ) { tab in
-            Text(tab.title).font(.largeTitle.bold())
-        } tabItem: { tab, isSelected in
-            ITabBarDefaultItemView(
-                config: ITabBarItemConfig(
-                    icon: "star",
-                    selectedIcon: "star.fill",
-                    title: tab.title,
-                    animation: tab.animation
-                ),
-                isSelected: isSelected,
-                style: currentStyle
-            )
+            VStack(spacing: 12) {
+                Text(tab.title).font(.largeTitle.bold())
+                Text("Tap the \"\(tab.title)\" tab below to see its animation")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 32)
+            }
         }
         .overlay(alignment: .topLeading) {
             Button("Close") { dismiss() }.padding()
