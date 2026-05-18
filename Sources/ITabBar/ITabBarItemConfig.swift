@@ -22,10 +22,25 @@ public struct ITabBarItemConfig: Sendable {
     }
 }
 
+/// Context passed to a `.custom` animation builder on each invocation.
+/// - `isSelected`: current selection state of the tab.
+/// - `tapTrigger`: a token that flips on every tap on this tab (including re-taps on the
+///   currently-selected tab) and on selection changes. Use it to drive replay-able animations
+///   (e.g. Lottie) via `.id(ctx.tapTrigger)` or `.onChange(of: ctx.tapTrigger)`.
+public struct ITabBarAnimationContext: Sendable, Hashable {
+    public let isSelected: Bool
+    public let tapTrigger: Bool
+
+    public init(isSelected: Bool, tapTrigger: Bool) {
+        self.isSelected = isSelected
+        self.tapTrigger = tapTrigger
+    }
+}
+
 public enum ITabBarAnimation: Sendable {
     case bounce
     case wiggle
     case pop
     case none
-    case custom(@MainActor @Sendable (Bool) -> AnyView)
+    case custom(@MainActor @Sendable (ITabBarAnimationContext) -> AnyView)
 }

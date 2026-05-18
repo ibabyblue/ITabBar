@@ -1,5 +1,8 @@
 import SwiftUI
 
+// Window for detecting the second tap in a double-tap, matching UIKit's default tapCount window.
+private let _doubleTapWindow: TimeInterval = 0.3
+
 @MainActor
 struct _TabBarItem<TabItemView: View & Sendable>: View {
     let isSelected: Bool
@@ -10,41 +13,38 @@ struct _TabBarItem<TabItemView: View & Sendable>: View {
     @ViewBuilder let content: () -> TabItemView
 
     @State private var animKey = false
+    @State private var lastTapTime: Date = .distantPast
 
+    // Mirrors UIKit's `touchDown` + `touchDownRepeat` split: single tap fires immediately
+    // on the first touch, and a second touch within the window fires the double-tap handler
+    // (without re-firing single). Long press cancels any pending double-tap timing.
     var body: some View {
-        if let doubleTap = onDoubleTap {
-            animatedContent
-                .contentShape(Rectangle())
-                .gesture(
-                    LongPressGesture(minimumDuration: 0.5)
-                        .onEnded { _ in onLongPress?() }
-                        .exclusively(before:
-                            TapGesture(count: 2)
-                                .onEnded { doubleTap() }
-                                .exclusively(before:
-                                    TapGesture(count: 1)
-                                        .onEnded { onTap(); if isSelected { animKey.toggle() } }
-                                )
-                        )
-                )
-                .onChange(of: isSelected) { _, newValue in
-                    if newValue { animKey.toggle() }
-                }
-        } else {
-            animatedContent
-                .contentShape(Rectangle())
-                .gesture(
-                    LongPressGesture(minimumDuration: 0.5)
-                        .onEnded { _ in onLongPress?() }
-                        .exclusively(before:
-                            TapGesture(count: 1)
-                                .onEnded { onTap(); if isSelected { animKey.toggle() } }
-                        )
-                )
-                .onChange(of: isSelected) { _, newValue in
-                    if newValue { animKey.toggle() }
-                }
-        }
+        animatedContent
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+            .gesture(
+                LongPressGesture(minimumDuration: 0.5)
+                    .onEnded { _ in
+                        lastTapTime = .distantPast
+                        onLongPress?()
+                    }
+                    .exclusively(before:
+                        TapGesture(count: 1).onEnded {
+                            let now = Date()
+                            if let onDoubleTap, now.timeIntervalSince(lastTapTime) < _doubleTapWindow {
+                                lastTapTime = .distantPast
+                                onDoubleTap()
+                            } else {
+                                lastTapTime = now
+                                onTap()
+                                if isSelected { animKey.toggle() }
+                            }
+                        }
+                    )
+            )
+            .onChange(of: isSelected) { _, newValue in
+                if newValue { animKey.toggle() }
+            }
     }
 
     @ViewBuilder
@@ -84,7 +84,7 @@ struct _TabBarItem<TabItemView: View & Sendable>: View {
         case .none:
             content()
         case .custom(let builder):
-            builder(isSelected)
+            builder(ITabBarAnimationContext(isSelected: isSelected, tapTrigger: animKey))
         }
     }
 }
