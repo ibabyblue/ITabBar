@@ -26,7 +26,7 @@ public struct ITabBarDefaultItemView: View {
                         .padding(.horizontal, 4)
                         .padding(.vertical, 1)
                         .background(style.badgeColor, in: Capsule())
-                        .offset(x: 10, y: -6)
+                        .offset(x: 10, y: -2)
                 }
             }
 
