@@ -43,45 +43,54 @@ public struct ITabBar<Tab: Hashable, Content: View, TabItemView: View & Sendable
     }
 
     public var body: some View {
-        ZStack(alignment: .bottom) {
-            if let idx = tabs.firstIndex(of: validSelection) {
-                content(tabs[idx])
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .ignoresSafeArea()
-            }
+        GeometryReader { proxy in
+            let bottomInset = proxy.safeAreaInsets.bottom
+            let barTotalHeight = style.height + bottomInset
 
-            ZStack(alignment: .top) {
-                _TabBarBackground(shape: shape, style: style)
-                    .frame(height: style.height)
+            ZStack(alignment: .bottom) {
+                if let idx = tabs.firstIndex(of: validSelection) {
+                    content(tabs[idx])
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .ignoresSafeArea()
+                }
 
-                HStack(spacing: style.itemSpacing > 0 ? style.itemSpacing : nil) {
-                    ForEach(Array(tabs.enumerated()), id: \.offset) { idx, tab in
-                        if shape != .plain && idx == tabs.count / 2 {
-                            Spacer().frame(width: style.fabSize + 16)
-                        }
-                        let doubleTap = doubleTapAction
-                        let longPress = longPressAction
-                        _TabBarItem(
-                            isSelected: validSelection == tab,
-                            animation: configStore?[tab]?.animation ?? .bounce,
-                            onTap: { selection = tab },
-                            onDoubleTap: doubleTap.map { action in { action(tab) } },
-                            onLongPress: longPress.map { action in { action(tab) } }
-                        ) {
-                            tabItem(tab, validSelection == tab)
+                ZStack(alignment: .top) {
+                    // Background extends through the bottom safe area so the
+                    // Home indicator region is covered by the bar.
+                    _TabBarBackground(shape: shape, style: style)
+                        .frame(height: barTotalHeight)
+
+                    // Items stay in the original top region (above the safe area).
+                    HStack(spacing: style.itemSpacing > 0 ? style.itemSpacing : nil) {
+                        ForEach(Array(tabs.enumerated()), id: \.offset) { idx, tab in
+                            if shape != .plain && idx == tabs.count / 2 {
+                                Spacer().frame(width: style.fabSize + 16)
+                            }
+                            let doubleTap = doubleTapAction
+                            let longPress = longPressAction
+                            _TabBarItem(
+                                isSelected: validSelection == tab,
+                                animation: configStore?[tab]?.animation ?? .bounce,
+                                onTap: { selection = tab },
+                                onDoubleTap: doubleTap.map { action in { action(tab) } },
+                                onLongPress: longPress.map { action in { action(tab) } }
+                            ) {
+                                tabItem(tab, validSelection == tab)
+                            }
                         }
                     }
-                }
-                .padding(.horizontal, 8)
-                .frame(height: style.height)
-                .offset(y: 0)
+                    .padding(.horizontal, 8)
+                    .frame(height: style.height)
 
-                if shape != .plain {
-                    _FABButton(size: style.fabSize, color: style.fabColor, onTap: onCenterTap)
-                        .offset(y: fabYOffset)
+                    if shape != .plain {
+                        _FABButton(size: style.fabSize, color: style.fabColor, onTap: onCenterTap)
+                            .offset(y: fabYOffset)
+                    }
                 }
+                .frame(height: barTotalHeight)
             }
-            .frame(height: style.height)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .ignoresSafeArea(edges: .bottom)
         }
         .onChange(of: selection) { _, newValue in
             if !tabs.contains(newValue), let first = tabs.first {
