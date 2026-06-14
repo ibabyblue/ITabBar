@@ -1,3 +1,11 @@
+//
+//  ITabBarTests.swift
+//  ITabBarTests
+//
+//  Created by ibabyblue on 2026/05/14.
+//  Copyright © 2026 ibabyblue. All rights reserved.
+//
+
 import Testing
 import SwiftUI
 @testable import ITabBar

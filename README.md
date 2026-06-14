@@ -36,7 +36,7 @@ In Xcode choose **File → Add Package Dependencies**, enter the repository URL,
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/ibabyblue/ITabBar", from: "0.1.0")
+    .package(url: "https://github.com/ibabyblue/ITabBar", from: "0.1.1")
 ],
 targets: [
     .target(

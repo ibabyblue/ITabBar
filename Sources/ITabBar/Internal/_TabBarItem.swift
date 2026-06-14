@@ -1,3 +1,11 @@
+//
+//  _TabBarItem.swift
+//  ITabBar
+//
+//  Created by ibabyblue on 2026/05/14.
+//  Copyright © 2026 ibabyblue. All rights reserved.
+//
+
 import SwiftUI
 
 // Window for detecting the second tap in a double-tap, matching UIKit's default tapCount window.

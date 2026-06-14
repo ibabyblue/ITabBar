@@ -1,3 +1,11 @@
+//
+//  _SelectionHelpers.swift
+//  ITabBar
+//
+//  Created by ibabyblue on 2026/05/14.
+//  Copyright © 2026 ibabyblue. All rights reserved.
+//
+
 func validatedSelection<Tab: Hashable>(_ selection: Tab, in tabs: [Tab]) -> Tab? {
     guard !tabs.isEmpty else { return nil }
     return tabs.contains(selection) ? selection : tabs.first

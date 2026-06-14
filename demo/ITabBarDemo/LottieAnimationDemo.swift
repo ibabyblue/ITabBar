@@ -1,3 +1,11 @@
+//
+//  LottieAnimationDemo.swift
+//  ITabBarDemo
+//
+//  Created by ibabyblue on 2026/05/18.
+//  Copyright © 2026 ibabyblue. All rights reserved.
+//
+
 import SwiftUI
 import ITabBar
 import Lottie

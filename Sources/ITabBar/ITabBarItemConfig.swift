@@ -1,3 +1,11 @@
+//
+//  ITabBarItemConfig.swift
+//  ITabBar
+//
+//  Created by ibabyblue on 2026/05/14.
+//  Copyright © 2026 ibabyblue. All rights reserved.
+//
+
 import SwiftUI
 
 public struct ITabBarItemConfig: Sendable {

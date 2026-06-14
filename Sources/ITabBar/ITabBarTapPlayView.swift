@@ -1,3 +1,11 @@
+//
+//  ITabBarTapPlayView.swift
+//  ITabBar
+//
+//  Created by ibabyblue on 2026/05/18.
+//  Copyright © 2026 ibabyblue. All rights reserved.
+//
+
 import SwiftUI
 
 /// A drop-in container for `ITabBarItemConfig.animation = .custom { ... }` that toggles
