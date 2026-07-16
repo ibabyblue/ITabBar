@@ -11,6 +11,42 @@ import SwiftUI
 // Window for detecting the second tap in a double-tap, matching UIKit's default tapCount window.
 private let _doubleTapWindow: TimeInterval = 0.3
 
+enum _TabTapAction: Equatable {
+    case single
+    case double
+}
+
+struct _TabInteractionState {
+    private(set) var animationTrigger = false
+    private var lastTapTime: Date = .distantPast
+
+    mutating func registerTap(
+        at now: Date,
+        isSelected: Bool,
+        doubleTapEnabled: Bool
+    ) -> _TabTapAction {
+        if doubleTapEnabled, now.timeIntervalSince(lastTapTime) < _doubleTapWindow {
+            lastTapTime = .distantPast
+            animationTrigger.toggle()
+            return .double
+        }
+
+        lastTapTime = now
+        if isSelected {
+            animationTrigger.toggle()
+        }
+        return .single
+    }
+
+    mutating func becameSelected() {
+        animationTrigger.toggle()
+    }
+
+    mutating func registerLongPress() {
+        lastTapTime = .distantPast
+    }
+}
+
 @MainActor
 struct _TabBarItem<TabItemView: View & Sendable>: View {
     let isSelected: Bool
@@ -20,8 +56,7 @@ struct _TabBarItem<TabItemView: View & Sendable>: View {
     let onLongPress: (() -> Void)?
     @ViewBuilder let content: () -> TabItemView
 
-    @State private var animKey = false
-    @State private var lastTapTime: Date = .distantPast
+    @State private var interactionState = _TabInteractionState()
 
     // Mirrors UIKit's `touchDown` + `touchDownRepeat` split: single tap fires immediately
     // on the first touch, and a second touch within the window fires the double-tap handler
@@ -33,25 +68,27 @@ struct _TabBarItem<TabItemView: View & Sendable>: View {
             .gesture(
                 LongPressGesture(minimumDuration: 0.5)
                     .onEnded { _ in
-                        lastTapTime = .distantPast
+                        interactionState.registerLongPress()
                         onLongPress?()
                     }
                     .exclusively(before:
                         TapGesture(count: 1).onEnded {
-                            let now = Date()
-                            if let onDoubleTap, now.timeIntervalSince(lastTapTime) < _doubleTapWindow {
-                                lastTapTime = .distantPast
-                                onDoubleTap()
-                            } else {
-                                lastTapTime = now
+                            let action = interactionState.registerTap(
+                                at: Date(),
+                                isSelected: isSelected,
+                                doubleTapEnabled: onDoubleTap != nil
+                            )
+                            switch action {
+                            case .single:
                                 onTap()
-                                if isSelected { animKey.toggle() }
+                            case .double:
+                                onDoubleTap?()
                             }
                         }
                     )
             )
             .onChange(of: isSelected) { _, newValue in
-                if newValue { animKey.toggle() }
+                if newValue { interactionState.becameSelected() }
             }
     }
 
@@ -60,7 +97,7 @@ struct _TabBarItem<TabItemView: View & Sendable>: View {
         switch animation {
         case .bounce:
             content()
-                .keyframeAnimator(initialValue: CGFloat(1.0), trigger: animKey) { view, scale in
+                .keyframeAnimator(initialValue: CGFloat(1.0), trigger: interactionState.animationTrigger) { view, scale in
                     view.scaleEffect(scale)
                 } keyframes: { _ in
                     KeyframeTrack {
@@ -70,7 +107,7 @@ struct _TabBarItem<TabItemView: View & Sendable>: View {
                 }
         case .wiggle:
             content()
-                .keyframeAnimator(initialValue: CGFloat(0), trigger: animKey) { view, angle in
+                .keyframeAnimator(initialValue: CGFloat(0), trigger: interactionState.animationTrigger) { view, angle in
                     view.rotationEffect(.degrees(angle))
                 } keyframes: { _ in
                     KeyframeTrack {
@@ -81,7 +118,7 @@ struct _TabBarItem<TabItemView: View & Sendable>: View {
                 }
         case .pop:
             content()
-                .keyframeAnimator(initialValue: CGFloat(1.0), trigger: animKey) { view, scale in
+                .keyframeAnimator(initialValue: CGFloat(1.0), trigger: interactionState.animationTrigger) { view, scale in
                     view.scaleEffect(scale)
                 } keyframes: { _ in
                     KeyframeTrack {
@@ -92,7 +129,10 @@ struct _TabBarItem<TabItemView: View & Sendable>: View {
         case .none:
             content()
         case .custom(let builder):
-            builder(ITabBarAnimationContext(isSelected: isSelected, tapTrigger: animKey))
+            builder(ITabBarAnimationContext(
+                isSelected: isSelected,
+                tapTrigger: interactionState.animationTrigger
+            ))
         }
     }
 }

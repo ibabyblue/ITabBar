@@ -91,6 +91,7 @@ struct LottieAnimationDemo: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
             }
+            .ignoresSafeArea()
         }
         .overlay(alignment: .topLeading) {
             Button("Close") { dismiss() }.padding()

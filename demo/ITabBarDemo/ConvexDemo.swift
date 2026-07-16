@@ -56,6 +56,7 @@ struct ConvexDemo: View {
                     .padding(.horizontal)
                     .padding(.bottom, 150)
             }
+            .ignoresSafeArea(edges: .bottom)
         }
         .overlay(alignment: .topLeading) {
             Button("Close") { dismiss() }.padding()

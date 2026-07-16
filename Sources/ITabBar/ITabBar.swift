@@ -8,6 +8,16 @@
 
 import SwiftUI
 
+struct _TabBarLayoutMetrics {
+    let itemHeight: CGFloat
+    let totalHeight: CGFloat
+
+    init(itemHeight: CGFloat, bottomInset: CGFloat) {
+        self.itemHeight = itemHeight
+        self.totalHeight = itemHeight + bottomInset
+    }
+}
+
 public struct ITabBar<Tab: Hashable, Content: View, TabItemView: View & Sendable>: View {
     private let tabs: [Tab]
     @Binding private var selection: Tab
@@ -50,26 +60,31 @@ public struct ITabBar<Tab: Hashable, Content: View, TabItemView: View & Sendable
         }
     }
 
+    private func correctSelectionIfNeeded() {
+        if let corrected = selectionCorrection(selection, in: tabs) {
+            selection = corrected
+        }
+    }
+
     public var body: some View {
         GeometryReader { proxy in
             let bottomInset = proxy.safeAreaInsets.bottom
-            let barTotalHeight = style.height + bottomInset
+            let layout = _TabBarLayoutMetrics(itemHeight: style.height, bottomInset: bottomInset)
 
             ZStack(alignment: .bottom) {
                 if let idx = tabs.firstIndex(of: validSelection) {
                     content(tabs[idx])
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .ignoresSafeArea()
                 }
 
                 ZStack(alignment: .top) {
                     // Background extends through the bottom safe area so the
                     // Home indicator region is covered by the bar.
                     _TabBarBackground(shape: shape, style: style)
-                        .frame(height: barTotalHeight)
+                        .frame(height: layout.totalHeight)
 
                     // Items stay in the original top region (above the safe area).
-                    HStack(spacing: style.itemSpacing > 0 ? style.itemSpacing : nil) {
+                    HStack(spacing: style.itemSpacing) {
                         ForEach(Array(tabs.enumerated()), id: \.offset) { idx, tab in
                             if shape != .plain && idx == tabs.count / 2 {
                                 Spacer().frame(width: style.fabSize + 16)
@@ -88,22 +103,23 @@ public struct ITabBar<Tab: Hashable, Content: View, TabItemView: View & Sendable
                         }
                     }
                     .padding(.horizontal, 8)
-                    .frame(height: style.height)
+                    .frame(height: layout.itemHeight)
 
                     if shape != .plain {
                         _FABButton(size: style.fabSize, color: style.fabColor, onTap: onCenterTap)
                             .offset(y: fabYOffset)
                     }
                 }
-                .frame(height: barTotalHeight)
+                .frame(height: layout.totalHeight)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .ignoresSafeArea(edges: .bottom)
+            .ignoresSafeArea(.container, edges: .bottom)
         }
-        .onChange(of: selection) { _, newValue in
-            if !tabs.contains(newValue), let first = tabs.first {
-                selection = first
-            }
+        .onChange(of: tabs, initial: true) { _, _ in
+            correctSelectionIfNeeded()
+        }
+        .onChange(of: selection) { _, _ in
+            correctSelectionIfNeeded()
         }
     }
 

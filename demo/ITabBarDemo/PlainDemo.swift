@@ -32,6 +32,7 @@ struct PlainDemo: View {
             configs: configs
         ) { tab in
             pageContent(tab)
+                .ignoresSafeArea()
         }
         .onTabDoubleTap { tab in
             print("[PlainDemo] double tap: \(tab)")
