@@ -16,7 +16,6 @@ public struct ITabBarStyle: Sendable {
 
     public var backgroundColor: Color?   = nil
     public var backgroundMaterial: Material = .ultraThinMaterial
-    public var useLiquidGlass: Bool      = false
 
     public var height: CGFloat           = 56
     public var fabSize: CGFloat          = 52

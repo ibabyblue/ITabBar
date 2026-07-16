@@ -23,10 +23,100 @@ import SwiftUI
     @Test func defaultItemSpacingIsZero() {
         #expect(ITabBarStyle().itemSpacing == 0)
     }
-    @Test func liquidGlassDefaultFalse() {
-        #expect(ITabBarStyle().useLiquidGlass == false)
+    @Test func defaultBackgroundColorIsNil() {
+        #expect(ITabBarStyle().backgroundColor == nil)
+    }
+
+    @Test func defaultFabColorIsBlue() {
+        #expect(ITabBarStyle().fabColor == .blue)
     }
 }
+
+#if os(iOS) && compiler(>=6.2)
+@Suite struct ILiquidTabBarTests {
+    @Test @MainActor func liquidTabBarCanBeConstructed() {
+        if #available(iOS 26.0, *) {
+            var selection = 1
+            let binding = Binding(
+                get: { selection },
+                set: { selection = $0 }
+            )
+
+            _ = ILiquidTabBar(
+                tabs: [1, 2],
+                selection: binding,
+                configs: [
+                    1: .init(icon: "house", title: "Home"),
+                    2: .init(icon: "person", title: "Profile")
+                ]
+            ) { tab in
+                Text("Tab \(tab)")
+            }
+        }
+    }
+
+    @Test func itemConfigRetainsValues() {
+        if #available(iOS 26.0, *) {
+            let config = ILiquidTabBarItemConfig(
+                icon: "house",
+                selectedIcon: "house.fill",
+                title: "Home",
+                badge: "3"
+            )
+
+            #expect(config.icon == "house")
+            #expect(config.selectedIcon == "house.fill")
+            #expect(config.title == "Home")
+            #expect(config.badge == "3")
+        }
+    }
+
+    @Test func minimizeBehaviorMapsToUIKit() {
+        if #available(iOS 26.0, *) {
+            #expect(ILiquidTabBarMinimizeBehavior.automatic.uiKitValue == .automatic)
+            #expect(ILiquidTabBarMinimizeBehavior.never.uiKitValue == .never)
+            #expect(ILiquidTabBarMinimizeBehavior.onScrollDown.uiKitValue == .onScrollDown)
+            #expect(ILiquidTabBarMinimizeBehavior.onScrollUp.uiKitValue == .onScrollUp)
+        }
+    }
+
+    @Test func snapshotCorrectsRemovedSelection() {
+        if #available(iOS 26.0, *) {
+            let snapshot = _ILiquidTabSnapshot(
+                tabs: [1, 3],
+                configs: [:] as [Int: ILiquidTabBarItemConfig]
+            )
+
+            #expect(snapshot.resolvedSelection(2) == 1)
+            #expect(snapshot.selectedIndex(for: 2) == 0)
+        }
+    }
+
+    @Test func snapshotPreservesSelectionAcrossReordering() {
+        if #available(iOS 26.0, *) {
+            let snapshot = _ILiquidTabSnapshot(
+                tabs: [3, 1, 2],
+                configs: [:] as [Int: ILiquidTabBarItemConfig]
+            )
+
+            #expect(snapshot.resolvedSelection(2) == 2)
+            #expect(snapshot.selectedIndex(for: 2) == 2)
+        }
+    }
+
+    @Test func emptySnapshotHasNoResolvedSelection() {
+        if #available(iOS 26.0, *) {
+            let snapshot = _ILiquidTabSnapshot(
+                tabs: [] as [Int],
+                configs: [:] as [Int: ILiquidTabBarItemConfig]
+            )
+
+            #expect(snapshot.resolvedSelection(2) == nil)
+            #expect(snapshot.selectedIndex(for: 2) == nil)
+        }
+    }
+}
+#endif
 
 @Suite struct ITabBarItemConfigTests {
     @Test func badgeTruncatesAt3() {

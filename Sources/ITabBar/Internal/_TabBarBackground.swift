@@ -190,7 +190,6 @@ struct _TabBarBackground: View {
             shape.fill(color)
                 .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: -1)
         } else {
-            // TODO: iOS 26 — replace with .glassEffect() modifier when SDK available
             shape.fill(style.backgroundMaterial)
                 .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: -1)
         }

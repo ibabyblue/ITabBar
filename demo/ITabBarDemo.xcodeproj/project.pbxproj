@@ -20,6 +20,7 @@
 		CCCC000000000000000000AB /* tab_switch.json in Resources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000BA /* tab_switch.json */; };
 		CCCC000000000000000000AC /* tab_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000BB /* tab_icons.json */; };
 		CCCC000000000000000000AD /* tab_watermelon.json in Resources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000BC /* tab_watermelon.json */; };
+		CCCC000000000000000000AE /* ILiquidTabBarDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000BD /* ILiquidTabBarDemo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		CCCC000000000000000000BA /* tab_switch.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tab_switch.json; sourceTree = "<group>"; };
 		CCCC000000000000000000BB /* tab_icons.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tab_icons.json; sourceTree = "<group>"; };
 		CCCC000000000000000000BC /* tab_watermelon.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tab_watermelon.json; sourceTree = "<group>"; };
+		CCCC000000000000000000BD /* ILiquidTabBarDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ILiquidTabBarDemo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 				CCCC000000000000000000B5 /* ConvexDemo.swift */,
 				CCCC000000000000000000B6 /* AnimationDemo.swift */,
 				CCCC000000000000000000B8 /* LottieAnimationDemo.swift */,
+				CCCC000000000000000000BD /* ILiquidTabBarDemo.swift */,
 				CCCC000000000000000000B9 /* tab_heart.json */,
 				CCCC000000000000000000BA /* tab_switch.json */,
 				CCCC000000000000000000BB /* tab_icons.json */,
@@ -171,6 +174,7 @@
 				CCCC000000000000000000A5 /* ConvexDemo.swift in Sources */,
 				CCCC000000000000000000A6 /* AnimationDemo.swift in Sources */,
 				CCCC000000000000000000A9 /* LottieAnimationDemo.swift in Sources */,
+				CCCC000000000000000000AE /* ILiquidTabBarDemo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
