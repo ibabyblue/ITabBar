@@ -35,7 +35,7 @@ In Xcode choose **File → Add Package Dependencies**, enter the repository URL,
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/ibabyblue/ITabBar", from: "0.1.1")
+    .package(url: "https://github.com/ibabyblue/ITabBar", from: "0.2.0")
 ],
 targets: [
     .target(
@@ -194,14 +194,14 @@ animation: .custom { ctx in
     AnyView(
         ITabBarTapPlayView(
             context: ctx,
-            duration: LottieAnimation.named("heart")?.duration ?? 1.0
+            duration: LottieAnimation.named("tab_heart")?.duration ?? 1.0
         ) {
             // Default view — shown at rest
             Image(systemName: "heart")
         } active: {
             // Active view — mounted on tap, internally restarted on every re-tap
             // via SwiftUI identity (the container applies `.id(ctx.tapTrigger)`)
-            if let animation = LottieAnimation.named("heart") {
+            if let animation = LottieAnimation.named("tab_heart") {
                 LottieView(animation: animation)
                     .resizable()
                     .playbackMode(.playing(.fromProgress(0, toProgress: 1, loopMode: .playOnce)))
@@ -218,6 +218,10 @@ Behavior handled internally:
 - On switching to another tab → cancels the in-flight playback immediately and reverts to the default view.
 
 Works with any view (Lottie, `Image` + `symbolEffect`, custom `withAnimation` blocks, video frame sequences) — no Lottie dependency in the library itself.
+
+The Demo bundles four 100×100 Lottie samples with matched visual bounds, including a
+heart pop, fruit motion, switch snap, and staggered icon-grid animation. These JSON files
+belong to the Demo target; the ITabBar package itself remains dependency-free.
 
 ## Edge-Case Behavior
 
@@ -251,7 +255,7 @@ it can be copied into an app without reconstructing hidden demo state:
 - **Custom Styling** — colors, typography, height, spacing, background, and badge styling
 - **Custom Tab Item** — a fully custom SwiftUI tab-item layout
 - **Built-in Animations** — bounce, wiggle, pop, and none side by side
-- **Lottie Animation** — `ITabBarTapPlayView` swapping SF Symbol → bundled Lottie artwork
+- **Lottie Animation** — `ITabBarTapPlayView` swapping SF Symbol → size-matched bundled Lottie artwork
 - **Native Liquid Glass** — iOS 26 system selection lens, badge, dynamic tabs, programmatic selection, and minimize behavior
 
 The project also includes the `ITabBarDemoUITests` target. Run the shared scheme's Test
