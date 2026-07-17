@@ -24,7 +24,6 @@ private enum AnimTab: String, CaseIterable, Hashable {
 
 struct AnimationDemo: View {
     @State private var selection: AnimTab = .bounce
-    @Environment(\.dismiss) private var dismiss
 
     private let style: ITabBarStyle = {
         var s = ITabBarStyle()
@@ -48,12 +47,15 @@ struct AnimationDemo: View {
         ITabBar(
             tabs: AnimTab.allCases,
             selection: $selection,
-            shape: .concave,
+            shape: .plain,
             style: style,
             configs: configs,
             onCenterTap: nil
         ) { tab in
             VStack(spacing: 12) {
+                Image(systemName: "star.fill")
+                    .font(.system(size: 52))
+                    .foregroundStyle(.orange)
                 Text(tab.title).font(.largeTitle.bold())
                 Text("Tap the \"\(tab.title)\" tab below to see its animation")
                     .font(.callout)
@@ -61,10 +63,10 @@ struct AnimationDemo: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
             }
-            .ignoresSafeArea()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(.systemGroupedBackground))
         }
-        .overlay(alignment: .topLeading) {
-            Button("Close") { dismiss() }.padding()
-        }
+        .navigationTitle("Built-in Animations")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

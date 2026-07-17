@@ -42,8 +42,9 @@ struct _TabInteractionState {
         animationTrigger.toggle()
     }
 
-    mutating func registerLongPress() {
+    mutating func registerLongPress(isSelected: Bool) -> Bool {
         lastTapTime = .distantPast
+        return isSelected
     }
 }
 
@@ -68,8 +69,9 @@ struct _TabBarItem<TabItemView: View & Sendable>: View {
             .gesture(
                 LongPressGesture(minimumDuration: 0.5)
                     .onEnded { _ in
-                        interactionState.registerLongPress()
-                        onLongPress?()
+                        if interactionState.registerLongPress(isSelected: isSelected) {
+                            onLongPress?()
+                        }
                     }
                     .exclusively(before:
                         TapGesture(count: 1).onEnded {

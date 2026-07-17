@@ -25,7 +25,7 @@ struct ILiquidTabBarDemo: View {
     @State private var selection: LiquidTab = .home
     @State private var tabs = LiquidTab.allCases
     @State private var minimizeBehavior: ILiquidTabBarMinimizeBehavior = .onScrollDown
-    @Environment(\.dismiss) private var dismiss
+    @State private var doubleTapCount = 0
 
     private let configs: [LiquidTab: ILiquidTabBarItemConfig] = [
         .home: .init(icon: "house", selectedIcon: "house.fill", title: "Home"),
@@ -48,6 +48,11 @@ struct ILiquidTabBarDemo: View {
         ) { tab in
             page(for: tab)
         }
+        .onTabDoubleTap { _ in
+            doubleTapCount += 1
+        }
+        .navigationTitle("Native Liquid Glass")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     private func page(for tab: LiquidTab) -> some View {
@@ -61,14 +66,6 @@ struct ILiquidTabBarDemo: View {
 
             ScrollView {
                 VStack(spacing: 18) {
-                    HStack {
-                        Button("Close") { dismiss() }
-                        Spacer()
-                        Text("iOS 26 Native")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                    }
-
                     VStack(spacing: 8) {
                         Image(systemName: configs[tab]?.selectedIcon ?? configs[tab]?.icon ?? "questionmark")
                             .font(.system(size: 42, weight: .semibold))
@@ -107,6 +104,24 @@ struct ILiquidTabBarDemo: View {
 
     private var controls: some View {
         VStack(spacing: 14) {
+            DemoStatusRow(
+                title: "Selection",
+                value: selection.title,
+                accessibilityIdentifier: DemoAccessibility.liquidSelection
+            )
+            Divider()
+            DemoStatusRow(
+                title: "Order",
+                value: tabs.map(\.title).joined(separator: " · "),
+                accessibilityIdentifier: DemoAccessibility.liquidOrder
+            )
+            Divider()
+            DemoStatusRow(
+                title: "Double taps",
+                value: String(doubleTapCount),
+                accessibilityIdentifier: DemoAccessibility.liquidDoubleCount
+            )
+            Divider()
             Picker("Minimize", selection: $minimizeBehavior) {
                 ForEach(ILiquidTabBarMinimizeBehavior.allCases, id: \.self) { behavior in
                     Text(title(for: behavior)).tag(behavior)
@@ -121,12 +136,13 @@ struct ILiquidTabBarDemo: View {
                 selection = tabs[(currentIndex + 1) % tabs.count]
             }
 
-            Button(tabs.contains(.profile) ? "Remove Profile tab" : "Restore Profile tab") {
-                if tabs.contains(.profile) {
-                    tabs.removeAll { $0 == .profile }
-                } else {
-                    tabs = LiquidTab.allCases
-                }
+            Button("Remove selected tab") {
+                tabs.removeAll { $0 == selection }
+            }
+            .disabled(tabs.count <= 1)
+
+            Button("Reset tabs") {
+                tabs = LiquidTab.allCases
             }
         }
         .frame(maxWidth: .infinity)

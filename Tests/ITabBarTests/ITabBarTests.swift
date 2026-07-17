@@ -52,6 +52,7 @@ import SwiftUI
             ) { tab in
                 Text("Tab \(tab)")
             }
+            .onTabDoubleTap { _ in }
         }
     }
 
@@ -195,7 +196,7 @@ import SwiftUI
         var state = _TabInteractionState()
         _ = state.registerTap(at: start, isSelected: true, doubleTapEnabled: true)
 
-        state.registerLongPress()
+        _ = state.registerLongPress(isSelected: true)
 
         #expect(
             state.registerTap(
@@ -204,6 +205,69 @@ import SwiftUI
                 doubleTapEnabled: true
             ) == .single
         )
+    }
+
+    @Test func selectedTabLongPressIsEligible() {
+        var state = _TabInteractionState()
+        let isEligible = state.registerLongPress(isSelected: true)
+
+        #expect(isEligible)
+    }
+
+    @Test func unselectedTabLongPressIsIgnored() {
+        var state = _TabInteractionState()
+        let isEligible = state.registerLongPress(isSelected: false)
+
+        #expect(!isEligible)
+    }
+}
+
+@Suite struct ILiquidTabInteractionStateTests {
+    private let start = Date(timeIntervalSinceReferenceDate: 1_000)
+
+    @Test func secondSelectionOfSameTabIsDoubleTap() {
+        var state = _ILiquidTabInteractionState<Int>()
+
+        let first = state.registerSelection(1, at: start, enabled: true)
+        let second = state.registerSelection(
+            1,
+            at: start.addingTimeInterval(0.2),
+            enabled: true
+        )
+
+        #expect(!first)
+        #expect(second)
+    }
+
+    @Test func differentTabDoesNotCompleteDoubleTap() {
+        var state = _ILiquidTabInteractionState<Int>()
+
+        _ = state.registerSelection(1, at: start, enabled: true)
+        let result = state.registerSelection(
+            2,
+            at: start.addingTimeInterval(0.2),
+            enabled: true
+        )
+
+        #expect(!result)
+    }
+
+    @Test func disabledDoubleTapClearsPendingSelection() {
+        var state = _ILiquidTabInteractionState<Int>()
+
+        _ = state.registerSelection(1, at: start, enabled: true)
+        _ = state.registerSelection(
+            1,
+            at: start.addingTimeInterval(0.1),
+            enabled: false
+        )
+        let result = state.registerSelection(
+            1,
+            at: start.addingTimeInterval(0.2),
+            enabled: true
+        )
+
+        #expect(!result)
     }
 }
 

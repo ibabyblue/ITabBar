@@ -16,7 +16,6 @@ private enum ConvexTab: String, CaseIterable, Hashable {
 struct ConvexDemo: View {
     @State private var selection: ConvexTab = .home
     @State private var centerTapCount = 0
-    @Environment(\.dismiss) private var dismiss
 
     @State private var fabGap: CGFloat = 8
     @State private var convexProtrusion: CGFloat = 15
@@ -48,19 +47,29 @@ struct ConvexDemo: View {
             configs: configs,
             onCenterTap: { centerTapCount += 1 }
         ) { tab in
-            VStack {
-                Text(tab.rawValue.capitalized).font(.largeTitle.bold())
-                Text("+ tapped \(centerTapCount) times").foregroundStyle(.secondary)
-                Spacer()
-                controlPanel
-                    .padding(.horizontal)
-                    .padding(.bottom, 150)
+            VStack(spacing: 24) {
+                Image(systemName: "arrow.up.circle.fill")
+                    .font(.system(size: 52))
+                    .foregroundStyle(.tint)
+                Text(tab.rawValue.capitalized)
+                    .font(.largeTitle.bold())
+                DemoControlCard {
+                    DemoStatusRow(
+                        title: "Center taps",
+                        value: String(centerTapCount),
+                        accessibilityIdentifier: DemoAccessibility.convexFABCount
+                    )
+                    Divider()
+                    controlPanel
+                }
+                .padding(.horizontal, 20)
             }
-            .ignoresSafeArea(edges: .bottom)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(.bottom, 100)
+            .background(Color(.systemGroupedBackground))
         }
-        .overlay(alignment: .topLeading) {
-            Button("Close") { dismiss() }.padding()
-        }
+        .navigationTitle("Convex + FAB")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     private var controlPanel: some View {
@@ -70,8 +79,6 @@ struct ConvexDemo: View {
             sliderRow(label: "fabSize",          value: $fabSize,          range: 40...80)
             sliderRow(label: "curveRadius",      value: $curveRadius,      range: 0...60)
         }
-        .padding()
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
     }
 
     private func sliderRow(label: String, value: Binding<CGFloat>, range: ClosedRange<CGFloat>) -> some View {

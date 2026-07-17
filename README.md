@@ -15,10 +15,10 @@ Two focused tab bar components with zero third-party dependencies: `ITabBar` is 
 - **FAB center button** — optional center action button for concave / convex styles
 - **Badge support** — numeric or text badge on any tab
 - **Zero-delay tap** — single tap fires immediately, double tap arrives as an additional event (mirrors UIKit's `touchDown` + `touchDownRepeat`), so registering a double-tap handler doesn't slow down single taps
-- **Long-press callback** — per-tab long-press recognition with default 0.5s threshold
+- **Selected-tab long press** — the callback fires only when the currently selected tab is held for at least 0.5s
 - **Equal-width items** — tabs always distribute evenly across the bar regardless of item content width
 - **Flexible tab items** — default icon + label template or fully custom `ViewBuilder`
-- **Native Liquid Glass** — a separate iOS 26+ `ILiquidTabBar` backed by `UITabBarController`
+- **Native Liquid Glass** — a separate iOS 26+ `ILiquidTabBar` backed by `UITabBarController`, including double-tap callbacks
 
 ## Requirements
 
@@ -129,6 +129,9 @@ struct LiquidTabs: View {
         ) { tab in
             pageView(tab)
         }
+        .onTabDoubleTap { tab in
+            handleDoubleTap(tab)
+        }
     }
 }
 ```
@@ -136,7 +139,9 @@ struct LiquidTabs: View {
 `ILiquidTabBar` intentionally supports the native item surface only: SF Symbol name,
 selected symbol name, title, badge, selection, dynamic tabs, and the iOS 26 minimize
 behavior. Custom SwiftUI tab items, Lottie, FAB, concave, and convex belong to `ITabBar`.
-There is no pre-iOS 26 fallback and no private UIKit hierarchy access.
+There is no pre-iOS 26 fallback and no private UIKit hierarchy access. Native double tap is
+supported; native per-item long press is intentionally unsupported because UIKit does not
+expose a public long-press target API for `UITabBarItem`.
 
 ## Custom Tab Item
 
@@ -227,18 +232,30 @@ Works with any view (Lottie, `Image` + `symbolEffect`, custom `withAnimation` bl
 | `ILiquidTabBar` tabs empty | Native controller has no tab items; no crash |
 | Single tap with no double-tap handler | Fires immediately, no detection delay |
 | Single tap with double-tap handler | Fires immediately; second tap within 0.3s becomes the double-tap event |
-| Long press (≥ 0.5s) | Fires `onLongPress`; resets any in-flight double-tap timing |
+| Long press on selected `ITabBar` item (≥ 0.5s) | Fires `onLongPress`; resets any in-flight double-tap timing |
+| Long press on unselected `ITabBar` item | Does not change selection and does not fire the callback |
+| `ILiquidTabBar` double tap | Fires `onTabDoubleTap` after two user selections of the same tab within 0.3s |
+| `ILiquidTabBar` long press | Intentionally unsupported by the public native-item surface |
 
 ## Demo
 
-Open `demo/ITabBarDemo.xcodeproj`, select a simulator and run. Covers six scenarios:
+Open `demo/ITabBarDemo.xcodeproj`, select the shared `ITabBarDemo` scheme, and run. The
+catalog contains ten independent examples; each page owns its complete component setup so
+it can be copied into an app without reconstructing hidden demo state:
 
-- **Plain** — flat tab bar with badges, double-tap / long-press callbacks
-- **Concave** — water-drop notch with FAB; live slider panel for tuning `fabGap` / `fabSize` / `curveRadius`
-- **Convex** — wrap-arc dome with FAB; live slider panel for tuning `fabGap` / `convexProtrusion` / `fabSize` / `curveRadius`
-- **Animations** — all built-in animation presets side by side
-- **Lottie Animation** — `ITabBarTapPlayView` swapping SF Symbol → Lottie on tap, using bundled airbnb/lottie samples
-- **Liquid Tab Bar** — iOS 26 native Liquid Glass selection movement, badge, dynamic tabs, programmatic selection, and minimize behavior
+- **Basic Plain** — default and selected icons, titles, badge, and bound selection
+- **Tap Interactions** — visible selection, double-tap, and long-press callback results
+- **Concave + FAB** — recessed center action and live `fabGap` / `fabSize` / `curveRadius` controls
+- **Convex + FAB** — raised center action and live `fabGap` / `convexProtrusion` / `fabSize` / `curveRadius` controls
+- **Dynamic Tabs** — add, remove, reverse, and reset tabs, including automatic selection correction
+- **Custom Styling** — colors, typography, height, spacing, background, and badge styling
+- **Custom Tab Item** — a fully custom SwiftUI tab-item layout
+- **Built-in Animations** — bounce, wiggle, pop, and none side by side
+- **Lottie Animation** — `ITabBarTapPlayView` swapping SF Symbol → bundled Lottie artwork
+- **Native Liquid Glass** — iOS 26 system selection lens, badge, dynamic tabs, programmatic selection, and minimize behavior
+
+The project also includes the `ITabBarDemoUITests` target. Run the shared scheme's Test
+action to verify the catalog and the interactive state shown by every example.
 
 ## Design Notes
 

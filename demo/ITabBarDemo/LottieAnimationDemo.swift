@@ -52,7 +52,6 @@ private enum LottieTab: String, CaseIterable, Hashable {
 
 struct LottieAnimationDemo: View {
     @State private var selection: LottieTab = .heart
-    @Environment(\.dismiss) private var dismiss
 
     private let style: ITabBarStyle = {
         var s = ITabBarStyle()
@@ -84,6 +83,9 @@ struct LottieAnimationDemo: View {
             onCenterTap: nil
         ) { tab in
             VStack(spacing: 12) {
+                Image(systemName: tab.staticIcon)
+                    .font(.system(size: 52))
+                    .foregroundStyle(.pink)
                 Text(tab.title).font(.largeTitle.bold())
                 Text("Tap any tab below — the static icon swaps to a Lottie animation, plays once, then snaps back.")
                     .font(.callout)
@@ -91,11 +93,11 @@ struct LottieAnimationDemo: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
             }
-            .ignoresSafeArea()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(.systemGroupedBackground))
         }
-        .overlay(alignment: .topLeading) {
-            Button("Close") { dismiss() }.padding()
-        }
+        .navigationTitle("Lottie Animation")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

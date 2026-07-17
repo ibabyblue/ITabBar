@@ -19,6 +19,7 @@ public struct ILiquidTabBar<Tab: Hashable, Content: View>: View {
     private let configs: [Tab: ILiquidTabBarItemConfig]
     private let minimizeBehavior: ILiquidTabBarMinimizeBehavior
     private let content: (Tab) -> Content
+    private var doubleTapAction: ((Tab) -> Void)?
 
     public init(
         tabs: [Tab],
@@ -40,6 +41,7 @@ public struct ILiquidTabBar<Tab: Hashable, Content: View>: View {
             selection: $selection,
             configs: configs,
             minimizeBehavior: minimizeBehavior,
+            doubleTapAction: doubleTapAction,
             content: content
         )
         .onChange(of: tabs, initial: true) { _, _ in
@@ -55,6 +57,12 @@ public struct ILiquidTabBar<Tab: Hashable, Content: View>: View {
             selection = correctedSelection
         }
     }
+
+    public func onTabDoubleTap(perform action: @escaping (Tab) -> Void) -> Self {
+        var copy = self
+        copy.doubleTapAction = action
+        return copy
+    }
 }
 
 @available(iOS 26.0, *)
@@ -63,6 +71,7 @@ private struct _ILiquidTabControllerBridge<Tab: Hashable, Content: View>: UIView
     @Binding var selection: Tab
     let configs: [Tab: ILiquidTabBarItemConfig]
     let minimizeBehavior: ILiquidTabBarMinimizeBehavior
+    let doubleTapAction: ((Tab) -> Void)?
     let content: (Tab) -> Content
 
     func makeCoordinator() -> Coordinator {
@@ -78,6 +87,7 @@ private struct _ILiquidTabControllerBridge<Tab: Hashable, Content: View>: UIView
             selection: selection,
             configs: configs,
             minimizeBehavior: minimizeBehavior,
+            doubleTapAction: doubleTapAction,
             content: content
         )
         return controller
@@ -91,6 +101,7 @@ private struct _ILiquidTabControllerBridge<Tab: Hashable, Content: View>: UIView
             selection: selection,
             configs: configs,
             minimizeBehavior: minimizeBehavior,
+            doubleTapAction: doubleTapAction,
             content: content
         )
     }
@@ -101,6 +112,8 @@ private struct _ILiquidTabControllerBridge<Tab: Hashable, Content: View>: UIView
 
         private var tabs: [Tab] = []
         private var hostingControllers: [Tab: UIHostingController<Content>] = [:]
+        private var doubleTapAction: ((Tab) -> Void)?
+        private var interactionState = _ILiquidTabInteractionState<Tab>()
         private var isSynchronizing = false
 
         init(selection: Binding<Tab>) {
@@ -113,12 +126,14 @@ private struct _ILiquidTabControllerBridge<Tab: Hashable, Content: View>: UIView
             selection: Tab,
             configs: [Tab: ILiquidTabBarItemConfig],
             minimizeBehavior: ILiquidTabBarMinimizeBehavior,
+            doubleTapAction: ((Tab) -> Void)?,
             content: (Tab) -> Content
         ) {
             isSynchronizing = true
             defer { isSynchronizing = false }
 
             self.tabs = tabs
+            self.doubleTapAction = doubleTapAction
             let activeTabs = Set(tabs)
             hostingControllers = hostingControllers.filter { activeTabs.contains($0.key) }
 
@@ -161,6 +176,14 @@ private struct _ILiquidTabControllerBridge<Tab: Hashable, Content: View>: UIView
             let selectedTab = tabs[tabBarController.selectedIndex]
             if selection.wrappedValue != selectedTab {
                 selection.wrappedValue = selectedTab
+            }
+
+            if interactionState.registerSelection(
+                selectedTab,
+                at: Date(),
+                enabled: doubleTapAction != nil
+            ) {
+                doubleTapAction?(selectedTab)
             }
         }
 

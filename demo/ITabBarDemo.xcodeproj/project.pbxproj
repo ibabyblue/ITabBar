@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		CCCC000000000000000000A1 /* ITabBarDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000B1 /* ITabBarDemoApp.swift */; };
 		CCCC000000000000000000A2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000B2 /* ContentView.swift */; };
-		CCCC000000000000000000A3 /* PlainDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000B3 /* PlainDemo.swift */; };
+		CCCC000000000000000000A3 /* BasicPlainDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000B3 /* BasicPlainDemo.swift */; };
 		CCCC000000000000000000A4 /* ConcaveDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000B4 /* ConcaveDemo.swift */; };
 		CCCC000000000000000000A5 /* ConvexDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000B5 /* ConvexDemo.swift */; };
 		CCCC000000000000000000A6 /* AnimationDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000B6 /* AnimationDemo.swift */; };
@@ -21,12 +21,29 @@
 		CCCC000000000000000000AC /* tab_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000BB /* tab_icons.json */; };
 		CCCC000000000000000000AD /* tab_watermelon.json in Resources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000BC /* tab_watermelon.json */; };
 		CCCC000000000000000000AE /* ILiquidTabBarDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCC000000000000000000BD /* ILiquidTabBarDemo.swift */; };
+		DDDD000000000000000000A1 /* ITabBarDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDD000000000000000000B2 /* ITabBarDemoUITests.swift */; };
+		DDDD000000000000000000A2 /* DemoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDD000000000000000000B3 /* DemoModel.swift */; };
+		DDDD000000000000000000A3 /* DemoComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDD000000000000000000B4 /* DemoComponents.swift */; };
+		DDDD000000000000000000A4 /* TapInteractionsDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDD000000000000000000B5 /* TapInteractionsDemo.swift */; };
+		DDDD000000000000000000A5 /* CustomStylingDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDD000000000000000000B6 /* CustomStylingDemo.swift */; };
+		DDDD000000000000000000A6 /* CustomTabItemDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDD000000000000000000B7 /* CustomTabItemDemo.swift */; };
+		DDDD000000000000000000A7 /* DynamicTabsDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDD000000000000000000B8 /* DynamicTabsDemo.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DDDD000000000000000000D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CCCC000000000000000000F1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CCCC000000000000000000E1;
+			remoteInfo = ITabBarDemo;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		CCCC000000000000000000B1 /* ITabBarDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITabBarDemoApp.swift; sourceTree = "<group>"; };
 		CCCC000000000000000000B2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		CCCC000000000000000000B3 /* PlainDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainDemo.swift; sourceTree = "<group>"; };
+		CCCC000000000000000000B3 /* BasicPlainDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicPlainDemo.swift; sourceTree = "<group>"; };
 		CCCC000000000000000000B4 /* ConcaveDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcaveDemo.swift; sourceTree = "<group>"; };
 		CCCC000000000000000000B5 /* ConvexDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvexDemo.swift; sourceTree = "<group>"; };
 		CCCC000000000000000000B6 /* AnimationDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationDemo.swift; sourceTree = "<group>"; };
@@ -37,6 +54,14 @@
 		CCCC000000000000000000BB /* tab_icons.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tab_icons.json; sourceTree = "<group>"; };
 		CCCC000000000000000000BC /* tab_watermelon.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tab_watermelon.json; sourceTree = "<group>"; };
 		CCCC000000000000000000BD /* ILiquidTabBarDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ILiquidTabBarDemo.swift; sourceTree = "<group>"; };
+		DDDD000000000000000000B1 /* ITabBarDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ITabBarDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DDDD000000000000000000B2 /* ITabBarDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITabBarDemoUITests.swift; sourceTree = "<group>"; };
+		DDDD000000000000000000B3 /* DemoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoModel.swift; sourceTree = "<group>"; };
+		DDDD000000000000000000B4 /* DemoComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoComponents.swift; sourceTree = "<group>"; };
+		DDDD000000000000000000B5 /* TapInteractionsDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapInteractionsDemo.swift; sourceTree = "<group>"; };
+		DDDD000000000000000000B6 /* CustomStylingDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStylingDemo.swift; sourceTree = "<group>"; };
+		DDDD000000000000000000B7 /* CustomTabItemDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabItemDemo.swift; sourceTree = "<group>"; };
+		DDDD000000000000000000B8 /* DynamicTabsDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicTabsDemo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +74,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DDDD000000000000000000C2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -56,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				CCCC000000000000000000D2 /* ITabBarDemo */,
+				DDDD000000000000000000D1 /* ITabBarDemoUITests */,
 				CCCC000000000000000000D3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,7 +98,13 @@
 			children = (
 				CCCC000000000000000000B1 /* ITabBarDemoApp.swift */,
 				CCCC000000000000000000B2 /* ContentView.swift */,
-				CCCC000000000000000000B3 /* PlainDemo.swift */,
+				DDDD000000000000000000B3 /* DemoModel.swift */,
+				DDDD000000000000000000B4 /* DemoComponents.swift */,
+				CCCC000000000000000000B3 /* BasicPlainDemo.swift */,
+				DDDD000000000000000000B5 /* TapInteractionsDemo.swift */,
+				DDDD000000000000000000B6 /* CustomStylingDemo.swift */,
+				DDDD000000000000000000B7 /* CustomTabItemDemo.swift */,
+				DDDD000000000000000000B8 /* DynamicTabsDemo.swift */,
 				CCCC000000000000000000B4 /* ConcaveDemo.swift */,
 				CCCC000000000000000000B5 /* ConvexDemo.swift */,
 				CCCC000000000000000000B6 /* AnimationDemo.swift */,
@@ -83,8 +122,17 @@
 			isa = PBXGroup;
 			children = (
 				CCCC000000000000000000B7 /* ITabBarDemo.app */,
+				DDDD000000000000000000B1 /* ITabBarDemoUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		DDDD000000000000000000D1 /* ITabBarDemoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				DDDD000000000000000000B2 /* ITabBarDemoUITests.swift */,
+			);
+			path = ITabBarDemoUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -111,6 +159,26 @@
 			productReference = CCCC000000000000000000B7 /* ITabBarDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DDDD000000000000000000E1 /* ITabBarDemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DDDD000000000000000000F3 /* Build configuration list for PBXNativeTarget "ITabBarDemoUITests" */;
+			buildPhases = (
+				DDDD000000000000000000C1 /* Sources */,
+				DDDD000000000000000000C2 /* Frameworks */,
+				DDDD000000000000000000C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DDDD000000000000000000D2 /* PBXTargetDependency */,
+			);
+			name = ITabBarDemoUITests;
+			packageProductDependencies = (
+			);
+			productName = ITabBarDemoUITests;
+			productReference = DDDD000000000000000000B1 /* ITabBarDemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -123,6 +191,10 @@
 				TargetAttributes = {
 					CCCC000000000000000000E1 = {
 						CreatedOnToolsVersion = 15.0;
+					};
+					DDDD000000000000000000E1 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = CCCC000000000000000000E1;
 					};
 				};
 			};
@@ -144,6 +216,7 @@
 			projectRoot = "";
 			targets = (
 				CCCC000000000000000000E1 /* ITabBarDemo */,
+				DDDD000000000000000000E1 /* ITabBarDemoUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -160,6 +233,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DDDD000000000000000000C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -169,7 +249,13 @@
 			files = (
 				CCCC000000000000000000A1 /* ITabBarDemoApp.swift in Sources */,
 				CCCC000000000000000000A2 /* ContentView.swift in Sources */,
-				CCCC000000000000000000A3 /* PlainDemo.swift in Sources */,
+				DDDD000000000000000000A2 /* DemoModel.swift in Sources */,
+				DDDD000000000000000000A3 /* DemoComponents.swift in Sources */,
+				CCCC000000000000000000A3 /* BasicPlainDemo.swift in Sources */,
+				DDDD000000000000000000A4 /* TapInteractionsDemo.swift in Sources */,
+				DDDD000000000000000000A5 /* CustomStylingDemo.swift in Sources */,
+				DDDD000000000000000000A6 /* CustomTabItemDemo.swift in Sources */,
+				DDDD000000000000000000A7 /* DynamicTabsDemo.swift in Sources */,
 				CCCC000000000000000000A4 /* ConcaveDemo.swift in Sources */,
 				CCCC000000000000000000A5 /* ConvexDemo.swift in Sources */,
 				CCCC000000000000000000A6 /* AnimationDemo.swift in Sources */,
@@ -178,7 +264,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DDDD000000000000000000C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDDD000000000000000000A1 /* ITabBarDemoUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DDDD000000000000000000D2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CCCC000000000000000000E1 /* ITabBarDemo */;
+			targetProxy = DDDD000000000000000000D3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		CCCC000000000000000000F4 /* Debug */ = {
@@ -354,6 +456,46 @@
 			};
 			name = Release;
 		};
+		DDDD000000000000000000F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ibabyblue.ITabBarDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ITabBarDemo;
+			};
+			name = Debug;
+		};
+		DDDD000000000000000000F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ibabyblue.ITabBarDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ITabBarDemo;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -371,6 +513,15 @@
 			buildConfigurations = (
 				CCCC000000000000000000F6 /* Debug */,
 				CCCC000000000000000000F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DDDD000000000000000000F3 /* Build configuration list for PBXNativeTarget "ITabBarDemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDDD000000000000000000F1 /* Debug */,
+				DDDD000000000000000000F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
