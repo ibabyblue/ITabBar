@@ -10,18 +10,18 @@ import SwiftUI
 import ITabBar
 import Lottie
 
-// Usage pattern shown here:
-//   1. Each tab's `.animation = .custom { ctx in ... }` returns an ITabBarTapPlayView.
-//   2. The library handles all state — default view ↔ active view, re-tap restart,
-//      cross-tab cancellation, duration-based revert.
-//   3. The consumer only provides:
-//        - default view (static icon at rest)
-//        - active view (Lottie / SwiftUI animation that plays once)
-//        - duration (how long the active view stays before snapping back)
-
+/// The bundled one-shot Lottie animations available in the example.
 private enum LottieTab: String, CaseIterable, Hashable {
-    case heart, watermelon, switch_, icons
+    /// The heart animation.
+    case heart
+    /// The watermelon animation.
+    case watermelon
+    /// The toggle-switch animation.
+    case switch_
+    /// The icon-grid animation.
+    case icons
 
+    /// The user-facing tab title.
     var title: String {
         switch self {
         case .heart:      return "Heart"
@@ -31,6 +31,7 @@ private enum LottieTab: String, CaseIterable, Hashable {
         }
     }
 
+    /// The resting SF Symbols name displayed outside active playback.
     var staticIcon: String {
         switch self {
         case .heart:      return "heart"
@@ -40,6 +41,7 @@ private enum LottieTab: String, CaseIterable, Hashable {
         }
     }
 
+    /// The bundled Lottie resource name without its file extension.
     var lottieName: String {
         switch self {
         case .heart:      return "tab_heart"
@@ -50,9 +52,12 @@ private enum LottieTab: String, CaseIterable, Hashable {
     }
 }
 
+/// Demonstrates one-shot Lottie playback through a custom tab item animation.
 struct LottieAnimationDemo: View {
+    /// The currently selected animated destination.
     @State private var selection: LottieTab = .heart
 
+    /// The pink-accented style shared by the Lottie items.
     private let style: ITabBarStyle = {
         var s = ITabBarStyle()
         s.selectedColor = .pink
@@ -61,6 +66,7 @@ struct LottieAnimationDemo: View {
         return s
     }()
 
+    /// Custom animation configurations that create ``LottieTabItem`` values.
     private var configs: [LottieTab: ITabBarItemConfig] {
         Dictionary(uniqueKeysWithValues: LottieTab.allCases.map { tab in
             (tab, ITabBarItemConfig(
@@ -73,6 +79,7 @@ struct LottieAnimationDemo: View {
         })
     }
 
+    /// The selected animation description and Lottie-enabled tab bar.
     var body: some View {
         ITabBar(
             tabs: LottieTab.allCases,
@@ -101,14 +108,19 @@ struct LottieAnimationDemo: View {
     }
 }
 
-/// One tab item: static SF Symbol by default, Lottie on tap — fully driven by ITabBarTapPlayView.
+/// A tab item that swaps its resting SF Symbol for bundled one-shot Lottie playback.
 private struct LottieTabItem: View {
+    /// The animation resource and resting icon represented by this item.
     let tab: LottieTab
+    /// The selection and replay token supplied by the custom animation builder.
     let context: ITabBarAnimationContext
+    /// The fonts and foreground colors shared with the enclosing tab bar.
     let style: ITabBarStyle
 
+    /// The decoded bundled Lottie animation, or `nil` if the resource cannot be loaded.
     private var lottie: LottieAnimation? { LottieAnimation.named(tab.lottieName) }
 
+    /// The replay container and title for the animated item.
     var body: some View {
         VStack(spacing: 2) {
             ITabBarTapPlayView(

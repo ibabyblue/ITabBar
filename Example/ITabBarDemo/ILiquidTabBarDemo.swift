@@ -11,22 +11,34 @@ import SwiftUI
 import ITabBar
 
 @available(iOS 26.0, *)
+/// The stable destinations hosted by the native iOS 26 example.
 private enum LiquidTab: String, CaseIterable, Hashable {
+    /// The home destination.
     case home
+    /// The discovery destination.
     case discover
+    /// The activity destination with a badge.
     case activity
+    /// The profile destination.
     case profile
 
+    /// The capitalized native tab title.
     var title: String { rawValue.capitalized }
 }
 
 @available(iOS 26.0, *)
+/// Demonstrates ``ILiquidTabBar`` selection, minimization, mutation, and double taps.
 struct ILiquidTabBarDemo: View {
+    /// The caller-owned selected native destination.
     @State private var selection: LiquidTab = .home
+    /// The mutable ordered destinations installed in the native controller.
     @State private var tabs = LiquidTab.allCases
+    /// The live UIKit tab bar minimization policy.
     @State private var minimizeBehavior: ILiquidTabBarMinimizeBehavior = .onScrollDown
+    /// The number of recognized same-tab double selections.
     @State private var doubleTapCount = 0
 
+    /// Native item configurations for all destinations.
     private let configs: [LiquidTab: ILiquidTabBarItemConfig] = [
         .home: .init(icon: "house", selectedIcon: "house.fill", title: "Home"),
         .discover: .init(icon: "safari", selectedIcon: "safari.fill", title: "Discover"),
@@ -39,6 +51,7 @@ struct ILiquidTabBarDemo: View {
         .profile: .init(icon: "person", selectedIcon: "person.fill", title: "Profile")
     ]
 
+    /// The native liquid tab bar and its selected scrollable destination page.
     var body: some View {
         ILiquidTabBar(
             tabs: tabs,
@@ -55,6 +68,10 @@ struct ILiquidTabBarDemo: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
+    /// Builds a scrollable native-tab page for one destination.
+    ///
+    /// - Parameter tab: The destination represented by the native tab.
+    /// - Returns: A gradient-backed page with integration controls and scrollable rows.
     private func page(for tab: LiquidTab) -> some View {
         ZStack {
             LinearGradient(
@@ -102,6 +119,7 @@ struct ILiquidTabBarDemo: View {
         }
     }
 
+    /// Controls and observable values for native selection, ordering, and minimization.
     private var controls: some View {
         VStack(spacing: 14) {
             DemoStatusRow(
@@ -150,6 +168,10 @@ struct ILiquidTabBarDemo: View {
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
     }
 
+    /// Resolves the page gradient for a native destination.
+    ///
+    /// - Parameter tab: The destination whose palette is requested.
+    /// - Returns: Two colors used by the page's linear gradient.
     private func colors(for tab: LiquidTab) -> [Color] {
         switch tab {
         case .home: [.cyan.opacity(0.42), .indigo.opacity(0.28)]
@@ -159,6 +181,10 @@ struct ILiquidTabBarDemo: View {
         }
     }
 
+    /// Resolves a user-facing label for a native minimization policy.
+    ///
+    /// - Parameter behavior: The package minimization option shown by the picker.
+    /// - Returns: A concise localized-ready label.
     private func title(for behavior: ILiquidTabBarMinimizeBehavior) -> String {
         switch behavior {
         case .automatic: "Automatic"

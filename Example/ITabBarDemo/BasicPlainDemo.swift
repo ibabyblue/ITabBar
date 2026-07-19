@@ -9,15 +9,27 @@
 import SwiftUI
 import ITabBar
 
+/// The stable tab identities used by the basic plain example.
 private enum BasicTab: String, CaseIterable, Hashable {
-    case home, explore, messages, profile
+    /// The home destination.
+    case home
+    /// The explore destination.
+    case explore
+    /// The messages destination.
+    case messages
+    /// The profile destination.
+    case profile
 
+    /// The capitalized destination title.
     var title: String { rawValue.capitalized }
 }
 
+/// Demonstrates the default plain tab bar, selected icons, and a badge.
 struct BasicPlainDemo: View {
+    /// The caller-owned selected destination.
     @State private var selection: BasicTab = .home
 
+    /// Default-item configurations for each destination.
     private let configs: [BasicTab: ITabBarItemConfig] = [
         .home: ITabBarItemConfig(icon: "house", selectedIcon: "house.fill", title: "Home"),
         .explore: ITabBarItemConfig(icon: "safari", selectedIcon: "safari.fill", title: "Explore"),
@@ -30,6 +42,7 @@ struct BasicPlainDemo: View {
         .profile: ITabBarItemConfig(icon: "person", selectedIcon: "person.fill", title: "Profile"),
     ]
 
+    /// The selected page and its default plain tab bar.
     var body: some View {
         ITabBar(
             tabs: BasicTab.allCases,
@@ -44,6 +57,10 @@ struct BasicPlainDemo: View {
     }
 
     @ViewBuilder
+    /// Builds the content and observable selection status for a destination.
+    ///
+    /// - Parameter tab: The selected basic tab.
+    /// - Returns: The page associated with `tab`.
     private func pageContent(_ tab: BasicTab) -> some View {
         VStack(spacing: 24) {
             Image(systemName: configs[tab]?.selectedIcon ?? configs[tab]?.icon ?? "questionmark")

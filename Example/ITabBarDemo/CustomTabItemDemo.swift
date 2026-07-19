@@ -9,11 +9,19 @@
 import ITabBar
 import SwiftUI
 
+/// The destinations rendered by the custom capsule item builder.
 private enum CustomItemTab: String, CaseIterable, Hashable {
-    case browse, library, downloads
+    /// The browsing destination.
+    case browse
+    /// The library destination.
+    case library
+    /// The downloads destination.
+    case downloads
 
+    /// The capitalized destination title.
     var title: String { rawValue.capitalized }
 
+    /// The SF Symbols name associated with this destination.
     var icon: String {
         switch self {
         case .browse: "safari"
@@ -23,9 +31,12 @@ private enum CustomItemTab: String, CaseIterable, Hashable {
     }
 }
 
+/// Demonstrates the custom `tabItem` initializer instead of default configurations.
 struct CustomTabItemDemo: View {
+    /// The currently selected custom-item destination.
     @State private var selection: CustomItemTab = .browse
 
+    /// The selected destination and custom capsule tab items.
     var body: some View {
         ITabBar(tabs: CustomItemTab.allCases, selection: $selection) { tab in
             VStack(spacing: 24) {
@@ -50,10 +61,14 @@ struct CustomTabItemDemo: View {
     }
 }
 
+/// A capsule-shaped tab item that expands its selected presentation.
 private struct CustomTabItem: View, Sendable {
+    /// The destination represented by this item.
     let tab: CustomItemTab
+    /// Whether the item currently represents the selected destination.
     let isSelected: Bool
 
+    /// The adaptive capsule content for the current selection state.
     var body: some View {
         HStack(spacing: 6) {
             Image(systemName: tab.icon)

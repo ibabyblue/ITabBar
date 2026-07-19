@@ -1,13 +1,18 @@
 import XCTest
 
 @MainActor
+/// End-to-end coverage for the runnable ITabBar example catalog.
 final class ITabBarDemoUITests: XCTestCase {
+    /// Launches a fresh example application instance.
+    ///
+    /// - Returns: The launched application proxy.
     private func launchApp() -> XCUIApplication {
         let app = XCUIApplication()
         app.launch()
         return app
     }
 
+    /// Verifies that every supported integration scenario appears in the catalog.
     func testCatalogShowsStandardExamples() {
         let app = launchApp()
 
@@ -25,6 +30,7 @@ final class ITabBarDemoUITests: XCTestCase {
         }
     }
 
+    /// Verifies plain-bar selection and badge presentation.
     func testBasicPlainChangesSelectionAndShowsBadge() {
         let app = launchApp()
 
@@ -35,6 +41,7 @@ final class ITabBarDemoUITests: XCTestCase {
         capture("Basic Plain", app: app)
     }
 
+    /// Verifies same-tab double taps and selected-only long presses.
     func testTapInteractionsReportDoubleTapAndLongPress() {
         let app = launchApp()
 
@@ -50,6 +57,7 @@ final class ITabBarDemoUITests: XCTestCase {
         XCTAssertEqual(statusValue(DemoID.tapLongPressCount, in: app), "1")
     }
 
+    /// Verifies both curved center buttons dispatch their actions.
     func testConcaveAndConvexCenterButtonsReportTaps() {
         let app = launchApp()
 
@@ -65,6 +73,7 @@ final class ITabBarDemoUITests: XCTestCase {
         capture("Convex FAB", app: app)
     }
 
+    /// Verifies custom styling and custom item scenes remain interactive.
     func testCustomStylingAndCustomItemExamplesAreInteractive() {
         let app = launchApp()
 
@@ -79,6 +88,7 @@ final class ITabBarDemoUITests: XCTestCase {
         capture("Custom Tab Item", app: app)
     }
 
+    /// Verifies built-in and bundled Lottie animation scenes open and change tabs.
     func testAnimationExamplesOpenAndChangeTabs() {
         let app = launchApp()
 
@@ -104,6 +114,7 @@ final class ITabBarDemoUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Lottie Animation"].exists)
     }
 
+    /// Verifies removal of the selected dynamic tab corrects selection and preserves insertion.
     func testDynamicTabsCorrectSelectionAfterRemovingSelectedTab() {
         let app = launchApp()
 
@@ -116,6 +127,9 @@ final class ITabBarDemoUITests: XCTestCase {
         capture("Dynamic Tabs", app: app)
     }
 
+    /// Verifies native iOS 26 selection, double taps, tab removal, and correction.
+    ///
+    /// - Throws: An `XCTSkip` error when the test runtime predates iOS 26.
     func testNativeLiquidGlassUpdatesSelectionAndTabs() throws {
         guard #available(iOS 26.0, *) else {
             throw XCTSkip("ILiquidTabBar is available on iOS 26 or newer.")
@@ -136,12 +150,23 @@ final class ITabBarDemoUITests: XCTestCase {
         capture("Native Liquid Glass", app: app)
     }
 
+    /// Reads an observable demo status value by accessibility identifier.
+    ///
+    /// - Parameters:
+    ///   - identifier: The status value's accessibility identifier.
+    ///   - app: The running example application.
+    /// - Returns: The status element's accessibility label.
     private func statusValue(_ identifier: String, in app: XCUIApplication) -> String {
         let element = app.staticTexts[identifier]
         XCTAssertTrue(element.waitForExistence(timeout: 2), identifier)
         return element.label
     }
 
+    /// Scrolls the catalog until the named example is hittable, then opens it.
+    ///
+    /// - Parameters:
+    ///   - name: The raw ``DemoExample`` name embedded in the row identifier.
+    ///   - app: The running example application.
     private func openExample(_ name: String, in app: XCUIApplication) {
         let row = app.buttons["demo.example.\(name)"]
         for _ in 0..<8 {
@@ -154,6 +179,13 @@ final class ITabBarDemoUITests: XCTestCase {
         XCTFail("Could not open demo example: \(name)")
     }
 
+    /// Waits for an observable demo status to match an expected value.
+    ///
+    /// - Parameters:
+    ///   - identifier: The status value's accessibility identifier.
+    ///   - expectedValue: The exact accessibility label expected from the value.
+    ///   - app: The running example application.
+    /// - Returns: `true` when the value matches before the timeout.
     private func waitForStatus(
         _ identifier: String,
         toEqual expectedValue: String,
@@ -166,6 +198,11 @@ final class ITabBarDemoUITests: XCTestCase {
         return XCTWaiter.wait(for: [expectation], timeout: 2) == .completed
     }
 
+    /// Attaches a named screenshot to the current test result.
+    ///
+    /// - Parameters:
+    ///   - name: The attachment's descriptive name.
+    ///   - app: The running application to capture.
     private func capture(_ name: String, app: XCUIApplication) {
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = name
@@ -174,16 +211,28 @@ final class ITabBarDemoUITests: XCTestCase {
     }
 }
 
+/// Accessibility identifiers mirrored from the application target for UI-test lookup.
 private enum DemoID {
+    /// The selected value in the basic plain example.
     static let basicSelection = "demo.basic.selection"
+    /// The double-tap count in the interaction example.
     static let tapDoubleCount = "demo.tap.doubleCount"
+    /// The long-press count in the interaction example.
     static let tapLongPressCount = "demo.tap.longPressCount"
+    /// The center-button tap count in the concave example.
     static let concaveFABCount = "demo.concave.fabCount"
+    /// The center-button tap count in the convex example.
     static let convexFABCount = "demo.convex.fabCount"
+    /// The selected value in the custom-item example.
     static let customItemSelection = "demo.customItem.selection"
+    /// The selected value in the dynamic-tabs example.
     static let dynamicSelection = "demo.dynamic.selection"
+    /// The ordered values in the dynamic-tabs example.
     static let dynamicOrder = "demo.dynamic.order"
+    /// The selected value in the native liquid example.
     static let liquidSelection = "demo.liquid.selection"
+    /// The ordered values in the native liquid example.
     static let liquidOrder = "demo.liquid.order"
+    /// The double-tap count in the native liquid example.
     static let liquidDoubleCount = "demo.liquid.doubleCount"
 }

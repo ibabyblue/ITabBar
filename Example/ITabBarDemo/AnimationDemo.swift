@@ -9,9 +9,19 @@
 import SwiftUI
 import ITabBar
 
+/// The built-in animation choices demonstrated by the catalog scene.
 private enum AnimTab: String, CaseIterable, Hashable {
-    case bounce, wiggle, pop, none_
+    /// Demonstrates the vertical spring bounce.
+    case bounce
+    /// Demonstrates the rotational wiggle.
+    case wiggle
+    /// Demonstrates the scale pop.
+    case pop
+    /// Demonstrates an item without a selection animation.
+    case none_
+    /// The user-facing animation name.
     var title: String { self == .none_ ? "None" : rawValue.capitalized }
+    /// The package animation represented by this tab.
     var animation: ITabBarAnimation {
         switch self {
         case .bounce: return .bounce
@@ -22,9 +32,12 @@ private enum AnimTab: String, CaseIterable, Hashable {
     }
 }
 
+/// Demonstrates every built-in ``ITabBarAnimation`` option in one plain tab bar.
 struct AnimationDemo: View {
+    /// The animation example currently selected by the user.
     @State private var selection: AnimTab = .bounce
 
+    /// The orange-accented style shared by all animation items.
     private let style: ITabBarStyle = {
         var s = ITabBarStyle()
         s.selectedColor = .orange
@@ -32,6 +45,7 @@ struct AnimationDemo: View {
         return s
     }()
 
+    /// Item configurations mapped to their corresponding animation options.
     private var configs: [AnimTab: ITabBarItemConfig] {
         Dictionary(uniqueKeysWithValues: AnimTab.allCases.map { tab in
             (tab, ITabBarItemConfig(
@@ -43,6 +57,7 @@ struct AnimationDemo: View {
         })
     }
 
+    /// The animation sample page and its plain tab bar selector.
     var body: some View {
         ITabBar(
             tabs: AnimTab.allCases,

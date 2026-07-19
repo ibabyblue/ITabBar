@@ -10,11 +10,21 @@
 import ITabBar
 import SwiftUI
 
+/// The destinations used to demonstrate tap and long-press callbacks.
 private enum InteractionTab: String, CaseIterable, Hashable {
-    case feed, search, alerts, profile
+    /// The feed destination.
+    case feed
+    /// The search destination.
+    case search
+    /// The alerts destination.
+    case alerts
+    /// The profile destination.
+    case profile
 
+    /// The capitalized destination title.
     var title: String { rawValue.capitalized }
 
+    /// The SF Symbols name associated with this destination.
     var icon: String {
         switch self {
         case .feed: "list.bullet.rectangle"
@@ -25,18 +35,25 @@ private enum InteractionTab: String, CaseIterable, Hashable {
     }
 }
 
+/// Demonstrates selection, same-tab double taps, and selected-tab long presses.
 struct TapInteractionsDemo: View {
+    /// The caller-owned selected interaction destination.
     @State private var selection: InteractionTab = .feed
+    /// The latest interaction message shown by the scene.
     @State private var latestEvent = "Selected Feed"
+    /// The number of recognized same-tab double taps.
     @State private var doubleTapCount = 0
+    /// The number of recognized long presses on selected tabs.
     @State private var longPressCount = 0
 
+    /// Default item configurations for each interaction destination.
     private let configs = Dictionary(
         uniqueKeysWithValues: InteractionTab.allCases.map { tab in
             (tab, ITabBarItemConfig(icon: tab.icon, title: tab.title))
         }
     )
 
+    /// The interaction tab bar and callbacks that update observable status values.
     var body: some View {
         ITabBar(
             tabs: InteractionTab.allCases,
@@ -60,6 +77,10 @@ struct TapInteractionsDemo: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
+    /// Builds the interaction status page for a destination.
+    ///
+    /// - Parameter tab: The selected interaction destination.
+    /// - Returns: The page showing the latest event and callback counters.
     private func pageContent(_ tab: InteractionTab) -> some View {
         VStack(spacing: 24) {
             Image(systemName: tab.icon)

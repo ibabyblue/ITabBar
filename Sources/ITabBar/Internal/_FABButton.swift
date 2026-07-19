@@ -9,11 +9,16 @@
 import SwiftUI
 
 @MainActor
+/// The circular center action button rendered by curved tab bar shapes.
 struct _FABButton: View {
+    /// The button diameter, in points.
     let size: CGFloat
+    /// The base color used by the gradient fill and shadow.
     let color: Color
+    /// The optional action invoked when the button is tapped.
     let onTap: (() -> Void)?
 
+    /// The gradient plus-icon button presentation.
     var body: some View {
         Button {
             onTap?()

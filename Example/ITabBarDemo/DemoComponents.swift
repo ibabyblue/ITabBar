@@ -8,9 +8,12 @@
 
 import SwiftUI
 
+/// A catalog row that presents an example's icon, title, and summary.
 struct DemoCatalogLabel: View {
+    /// The example described by this row.
     let example: DemoExample
 
+    /// The labeled two-line catalog presentation.
     var body: some View {
         Label {
             VStack(alignment: .leading, spacing: 3) {
@@ -25,11 +28,16 @@ struct DemoCatalogLabel: View {
     }
 }
 
+/// A labeled value row with a stable UI-test accessibility identifier.
 struct DemoStatusRow: View {
+    /// The status label shown on the leading edge.
     let title: String
+    /// The observable value shown on the trailing edge.
     let value: String
+    /// The identifier used to locate the value in UI tests.
     let accessibilityIdentifier: String
 
+    /// The aligned label and monospaced status value.
     var body: some View {
         HStack {
             Text(title)
@@ -42,13 +50,19 @@ struct DemoStatusRow: View {
     }
 }
 
+/// A reusable material card for interactive controls and observable status values.
 struct DemoControlCard<Content: View>: View {
+    /// The card content built during initialization.
     private let content: Content
 
+    /// Creates a control card from a SwiftUI content builder.
+    ///
+    /// - Parameter content: The controls or status rows placed inside the card.
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
 
+    /// The padded material-backed card hierarchy.
     var body: some View {
         VStack(spacing: 12) {
             content

@@ -38,14 +38,31 @@ import SwiftUI
 /// ```
 @MainActor
 public struct ITabBarTapPlayView<Default: View, Active: View>: View {
+    /// The current selection and replay state supplied by the tab bar.
     private let context: ITabBarAnimationContext
+    /// The requested active-content lifetime, in seconds.
     private let duration: TimeInterval
+    /// A builder for the resting item content.
     private let defaultView: () -> Default
+    /// A builder for the playback item content.
     private let activeView: () -> Active
 
+    /// Whether the active content is currently mounted.
     @State private var isActive = false
+    /// The pending task that restores the resting content after playback.
     @State private var resetTask: Task<Void, Never>?
 
+    /// Creates a container that swaps resting content for playback content on each tap.
+    ///
+    /// A nonpositive duration still allows the active view to mount briefly. The container adds
+    /// a small grace interval before restoring the resting view so one-shot animations can render
+    /// their final frame.
+    ///
+    /// - Parameters:
+    ///   - context: The custom-animation context supplied by ``ITabBar``.
+    ///   - duration: The intended playback duration, in seconds.
+    ///   - defaultView: The content shown while no playback is active.
+    ///   - activeView: The content mounted while playback is active.
     public init(
         context: ITabBarAnimationContext,
         duration: TimeInterval,
@@ -58,6 +75,7 @@ public struct ITabBarTapPlayView<Default: View, Active: View>: View {
         self.activeView = activeView
     }
 
+    /// The resting or active content for the current playback state.
     public var body: some View {
         ZStack {
             if isActive {
@@ -78,6 +96,7 @@ public struct ITabBarTapPlayView<Default: View, Active: View>: View {
         }
     }
 
+    /// Restarts playback and schedules restoration of the resting content.
     private func startPlayback() {
         resetTask?.cancel()
         isActive = true

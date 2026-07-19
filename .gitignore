@@ -16,3 +16,6 @@ DerivedData/
 .superpowers/
 .claude/
 docs/
+
+# Local coding-agent guidance
+/AGENTS.md

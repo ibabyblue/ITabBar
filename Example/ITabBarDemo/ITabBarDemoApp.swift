@@ -9,7 +9,9 @@
 import SwiftUI
 
 @main
+/// The runnable ITabBar integration example application.
 struct ITabBarDemoApp: App {
+    /// The main application window containing the example catalog.
     var body: some Scene {
         WindowGroup {
             ContentView()

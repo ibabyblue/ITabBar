@@ -8,9 +8,15 @@
 
 import SwiftUI
 
+/// A tab bar background with a circular center cutout.
 struct ConcaveShape: Shape {
+    /// The radius controlling the outer corners, shoulders, and center cutout.
     var curveRadius: CGFloat
 
+    /// Builds the closed concave background path inside the supplied rectangle.
+    ///
+    /// - Parameter rect: The layout rectangle available to the shape.
+    /// - Returns: A closed path that covers the rectangle below its curved top edge.
     func path(in rect: CGRect) -> Path {
         var path = Path()
         let radius = curveRadius
@@ -57,20 +63,26 @@ struct ConcaveShape: Shape {
     }
 }
 
-// Dome shape: three segments per side.
-//   1. flat bar top
-//   2. cubic shoulder rising smoothly from flat top to wrap-arc entry
-//   3. wrap arc — concentric with the FAB (radius = fabRadius + fabGap), arcs over
-//      the FAB top so the bar's edge appears to hug the button at a fixed gap
-// The cubic shoulder's end tangent is matched analytically to the wrap arc's tangent
-// at the entry point, so the shoulder→wrap junction is curvature-continuous.
+/// A tab bar background with a center dome that wraps around the floating action button.
+///
+/// Each side combines a flat edge, a cubic shoulder, and an arc concentric with the button.
+/// The shoulder's final tangent matches the wrap arc to keep the transition smooth.
 struct ConvexShape: Shape {
+    /// The radius controlling the outer top corners.
     var cornerRadius: CGFloat
-    var fabRadius: CGFloat           // = fabSize / 2
-    var fabGap: CGFloat              // gap between FAB and bar's wrap arc
-    var fabCenterY: CGFloat          // FAB center y (positive = inside bar, below bar top)
-    var shoulderExtension: CGFloat   // how far the shoulder cubic extends beyond the wrap-entry
+    /// The floating action button radius, in points.
+    var fabRadius: CGFloat
+    /// The fixed clearance between the button and the dome's wrap arc, in points.
+    var fabGap: CGFloat
+    /// The floating action button center on the vertical axis, measured from the bar's top edge.
+    var fabCenterY: CGFloat
+    /// The horizontal distance each cubic shoulder extends beyond its arc entry, in points.
+    var shoulderExtension: CGFloat
 
+    /// Builds the closed convex background path inside the supplied rectangle.
+    ///
+    /// - Parameter rect: The layout rectangle available to the shape.
+    /// - Returns: A closed path that covers the rectangle below its domed top edge.
     func path(in rect: CGRect) -> Path {
         var path = Path()
         let cr2 = cornerRadius / 2
@@ -163,10 +175,14 @@ struct ConvexShape: Shape {
     }
 }
 
+/// The styled background renderer for all package tab bar contours.
 struct _TabBarBackground: View {
+    /// The contour to render.
     let shape: ITabBarShape
+    /// The dimensions, color, and material applied to the contour.
     let style: ITabBarStyle
 
+    /// The selected contour filled with a solid color or material and a top shadow.
     var body: some View {
         switch shape {
         case .plain:
@@ -185,6 +201,10 @@ struct _TabBarBackground: View {
     }
 
     @ViewBuilder
+    /// Applies the configured fill and shadow to a concrete background shape.
+    ///
+    /// - Parameter shape: The concrete contour being rendered.
+    /// - Returns: The filled and shadowed shape hierarchy.
     private func backgroundContent<S: Shape>(_ shape: S) -> some View {
         if let color = style.backgroundColor {
             shape.fill(color)

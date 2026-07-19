@@ -9,15 +9,27 @@
 import ITabBar
 import SwiftUI
 
+/// The destinations used to demonstrate style customization.
 private enum StyledTab: String, CaseIterable, Hashable {
-    case overview, favorites, inbox, account
+    /// The overview destination.
+    case overview
+    /// The favorites destination.
+    case favorites
+    /// The inbox destination.
+    case inbox
+    /// The account destination.
+    case account
 
+    /// The capitalized destination title.
     var title: String { rawValue.capitalized }
 }
 
+/// Demonstrates colors, fonts, dimensions, spacing, and badge styling.
 struct CustomStylingDemo: View {
+    /// The currently selected styled destination.
     @State private var selection: StyledTab = .overview
 
+    /// The customized style applied to the example tab bar.
     private let style: ITabBarStyle = {
         var style = ITabBarStyle()
         style.selectedColor = .indigo
@@ -31,6 +43,7 @@ struct CustomStylingDemo: View {
         return style
     }()
 
+    /// Icons, titles, and badge content for the styled destinations.
     private let configs: [StyledTab: ITabBarItemConfig] = [
         .overview: .init(icon: "chart.bar", selectedIcon: "chart.bar.fill", title: "Overview"),
         .favorites: .init(icon: "heart", selectedIcon: "heart.fill", title: "Favorites"),
@@ -38,6 +51,7 @@ struct CustomStylingDemo: View {
         .account: .init(icon: "person.crop.circle", selectedIcon: "person.crop.circle.fill", title: "Account"),
     ]
 
+    /// The selected destination and fully customized tab bar.
     var body: some View {
         ITabBar(tabs: StyledTab.allCases, selection: $selection, style: style, configs: configs) { tab in
             VStack(spacing: 20) {

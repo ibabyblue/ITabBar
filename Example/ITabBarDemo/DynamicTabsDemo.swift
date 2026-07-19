@@ -9,11 +9,23 @@
 import ITabBar
 import SwiftUI
 
+/// All destinations that can participate in the dynamic tab sequence.
 private enum DynamicTab: String, CaseIterable, Hashable {
-    case home, explore, alerts, profile, favorites
+    /// The home destination.
+    case home
+    /// The explore destination.
+    case explore
+    /// The alerts destination.
+    case alerts
+    /// The profile destination.
+    case profile
+    /// The optional favorites destination.
+    case favorites
 
+    /// The capitalized destination title.
     var title: String { rawValue.capitalized }
 
+    /// The SF Symbols name associated with this destination.
     var icon: String {
         switch self {
         case .home: "house"
@@ -25,16 +37,21 @@ private enum DynamicTab: String, CaseIterable, Hashable {
     }
 }
 
+/// Demonstrates adding, removing, and reordering tabs while preserving valid selection.
 struct DynamicTabsDemo: View {
+    /// The mutable ordered destinations currently displayed by the tab bar.
     @State private var tabs: [DynamicTab] = [.home, .explore, .alerts, .profile]
+    /// The caller-owned selected destination corrected by ``ITabBar`` after removals.
     @State private var selection: DynamicTab = .home
 
+    /// Default item configurations for every destination that may be inserted.
     private let configs = Dictionary(
         uniqueKeysWithValues: DynamicTab.allCases.map { tab in
             (tab, ITabBarItemConfig(icon: tab.icon, selectedIcon: "\(tab.icon).fill", title: tab.title))
         }
     )
 
+    /// The dynamic tab container, current order, and mutation controls.
     var body: some View {
         ITabBar(tabs: tabs, selection: $selection, configs: configs) { tab in
             ScrollView {
@@ -71,6 +88,7 @@ struct DynamicTabsDemo: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
+    /// Buttons that remove, insert, reverse, or reset the tab collection.
     private var controls: some View {
         VStack(spacing: 10) {
             Button("Remove selected tab") {

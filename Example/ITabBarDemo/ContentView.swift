@@ -8,7 +8,9 @@
 
 import SwiftUI
 
+/// The example application's sectioned catalog and scene router.
 struct ContentView: View {
+    /// A navigation stack listing every example available on the current toolchain and OS.
     var body: some View {
         NavigationStack {
             List {
