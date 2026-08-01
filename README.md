@@ -39,7 +39,9 @@ The package has no external dependencies. The Example app depends on Lottie only
 
 ## Installation
 
-Add ITabBar with Swift Package Manager:
+In Xcode, choose **File → Add Package Dependencies** and enter the repository URL.
+
+To add ITabBar in `Package.swift`, declare the package dependency:
 
 ```swift
 dependencies: [
@@ -50,7 +52,14 @@ dependencies: [
 Then add the product to your target:
 
 ```swift
-.product(name: "ITabBar", package: "ITabBar")
+targets: [
+    .target(
+        name: "YourTarget",
+        dependencies: [
+            .product(name: "ITabBar", package: "ITabBar")
+        ]
+    )
+]
 ```
 
 ## ITabBar Quick Start
